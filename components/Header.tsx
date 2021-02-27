@@ -7,6 +7,7 @@ const StyledHeader = styled.div`
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  background: #6ae7ff;
 `;
 
 interface HeaderProps {}

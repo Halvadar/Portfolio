@@ -30,12 +30,12 @@ const StyledMountain = styled(animated.div)<StyledMountainProps>`
   }
 `;
 
-interface MountainProps {
+interface MountainAnimationsProps {
   leftMountain: { width: number; height: number };
   rightMountain: { width: number; height: number };
 }
 
-const MountainAnimations: React.FunctionComponent<MountainProps> = ({
+const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
   leftMountain,
   rightMountain,
 }) => {

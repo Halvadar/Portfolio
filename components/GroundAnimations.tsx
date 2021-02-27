@@ -5,22 +5,25 @@ import GroundBottomPart from "./GroundBottomPart";
 import GroundTopPart from "./GroundTopPart";
 import SpringWrapper from "./SpringWrapper";
 
-interface GroundAnimationsProps {
-  windowWidth: number;
-  windowHeight: number;
-  leftMountain: { height: number; width: number };
-  rightMountain: { height: number; width: number };
-}
-
 const StyledGround = styled.div`
   width: 100%;
   position: absolute;
 `;
+
+interface GroundAnimationsProps {
+  windowWidth: number;
+  windowHeight: number;
+  leftMountain: { height: number; width: number };
+  groundAnimationFinished: boolean;
+  setGroundAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
 const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
   windowWidth,
   windowHeight,
   leftMountain,
-  rightMountain,
+  groundAnimationFinished,
+  setGroundAnimationFinished,
 }) => {
   const [
     groundTopPartBackgroundHeight,
@@ -30,6 +33,7 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
   return (
     <>
       <SpringWrapper
+        onRestCallback={setGroundAnimationFinished}
         animationCanBeStarted={!!groundTopPartBackgroundHeight}
         springProps={
           groundTopPartBackgroundHeight
@@ -55,6 +59,7 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
                 }
               />
               <GroundBottomPart
+                groundAnimationFinished={groundAnimationFinished}
                 windowHeight={windowHeight}
                 leftMountain={leftMountain}
               />
