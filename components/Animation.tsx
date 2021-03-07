@@ -1,8 +1,14 @@
 import React, { useMemo, useState } from "react";
+import styled from "styled-components";
 import { mountainWidthsCalculator } from "../functions/mountainFunctions";
 import useWindowSize from "../hooks/useWindowSize";
 import GroundAnimations from "./GroundAnimations";
 import MountainAnimations from "./MountainAnimations";
+import SunAnimation from "./SunAnimation";
+
+const StyledAnimation = styled.div`
+  width: 100%;
+`;
 
 interface AnimationProps {}
 
@@ -37,7 +43,7 @@ const Animation: React.FunctionComponent<AnimationProps> = ({}) => {
   );
 
   return (
-    <b>
+    <StyledAnimation>
       <MountainAnimations {...mountainProps} />
 
       <GroundAnimations
@@ -47,7 +53,11 @@ const Animation: React.FunctionComponent<AnimationProps> = ({}) => {
         windowHeight={windowHeight}
         leftMountain={mountainProps.leftMountain}
       />
-    </b>
+      <SunAnimation
+        leftMountainHeight={mountainProps.leftMountain.height}
+        groundAnimationFinished={groundAnimationFinished}
+      />
+    </StyledAnimation>
   );
 };
 

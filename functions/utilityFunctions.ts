@@ -12,3 +12,15 @@ export const percentifier = (
 ): number => {
   return Math.floor((targetValue / referenceValue) * 100 * 100) / 100;
 };
+
+export const round = (value: number): number => {
+  return Math.round(value * 100) / 100;
+};
+
+export const numberToBoolean = (value: number): boolean => {
+  if (value > 0) {
+    return true;
+  }
+
+  return false;
+};

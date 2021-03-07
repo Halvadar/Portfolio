@@ -1,7 +1,8 @@
 import { percentifier } from "./utilityFunctions";
+import ratios from "../constants";
 
-const mountainWidthHeightRatio = 1.5;
-const rightLeftMountainRatio = 0.8;
+// ratios
+const { mountainWidthHeightRatio, rightLeftMountainRatio } = ratios;
 
 interface MountainWidthsCalculatorProps {
   windowWidth: number;

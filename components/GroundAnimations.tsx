@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import GroundBottomPart from "./GroundBottomPart";
 import GroundTopPart from "./GroundTopPart";
@@ -8,6 +7,7 @@ import SpringWrapper from "./SpringWrapper";
 const StyledGround = styled.div`
   width: 100%;
   position: absolute;
+  z-index: 1;
 `;
 
 interface GroundAnimationsProps {
@@ -60,6 +60,7 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
               />
               <GroundBottomPart
                 groundAnimationFinished={groundAnimationFinished}
+                windowWidth={windowWidth}
                 windowHeight={windowHeight}
                 leftMountain={leftMountain}
               />

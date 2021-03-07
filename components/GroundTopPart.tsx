@@ -4,7 +4,7 @@ import styled from "styled-components";
 import coordinateList from "../public/coordinateList";
 import animationData from "../public/Tree.json";
 import GroundTopPartBackground from "../public/GroundTopPartBackground.svg";
-import { groundTopPartDistanceFromBottomCalculator } from "../functions/groundFunction";
+import { groundTopPartDistanceFromBottomCalculator } from "../functions/groundFunctions";
 import River from "../public/River.json";
 import { percentifier, pixelRemover } from "../functions/utilityFunctions";
 

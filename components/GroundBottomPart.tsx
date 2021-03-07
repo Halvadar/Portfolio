@@ -1,10 +1,28 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import plantCoordinates from "../public/plantCoordinateList";
 import GroundBottomPartBackground from "../public/GroundBottomPartBackground.svg";
 import PlantComponent from "./PlantComponent";
-
+import HouseAnimation from "./HouseAnimation";
+import useWindowSize from "../hooks/useWindowSize";
+import {
+  filteredPlantsUpdate,
+  plantFilter,
+  plantStateIncrementValueCalculator,
+} from "../functions/plantFilter";
+import { numberToBoolean } from "../functions/utilityFunctions";
+import MainCharacter from "./MainCharacter";
+import {
+  houseLogDistanceFromTopCalculator,
+  houseLogSizeCalculator,
+  logDistanceFromLeftCalculator,
+} from "../functions/houseFunctions";
+import {
+  mainCharacterDistanceFromBottomCalculator,
+  mainCharacterSizeCalculator,
+} from "../functions/mainCharacterFunctions";
 // styled
+// We give top -4px because top and bottom part have space left between them
 
 const StyledBottomPart = styled.div`
   position: relative;
@@ -18,35 +36,122 @@ const StyledBottomPart = styled.div`
 // component
 interface GroundBottomPartProps {
   windowHeight: number;
+  windowWidth: number;
   leftMountain: { width: number; height: number };
   groundAnimationFinished: boolean;
 }
 
 const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
   windowHeight,
+  windowWidth,
   leftMountain,
   groundAnimationFinished,
 }) => {
+  // previousValues
+  const initialWindowRatio = useRef(windowHeight / windowWidth);
+  const previousWindowRatio = useRef(initialWindowRatio.current);
+
+  // memo
+  const currentWindowRatio = useMemo(() => windowHeight / windowWidth, [
+    windowWidth,
+    windowHeight,
+  ]);
+  const filteredPlants = useMemo(
+    () => plantFilter(windowWidth, windowHeight, leftMountain.height),
+    [windowWidth, windowHeight, leftMountain.height]
+  );
+  const houseLogSize = useMemo(
+    () => houseLogSizeCalculator(windowHeight, windowWidth),
+    [windowHeight, windowWidth]
+  );
+  const houseLogDistanceFromTop = useMemo(
+    () =>
+      houseLogDistanceFromTopCalculator(
+        windowHeight,
+        windowWidth,
+        leftMountain.height,
+        houseLogSize.house.height,
+        houseLogSize.log.height
+      ),
+    [
+      windowHeight,
+      windowWidth,
+      leftMountain.height,
+      houseLogSize.house.height,
+      houseLogSize.log.height,
+    ]
+  );
+  const logDistanceFromLeft = useMemo(
+    () => logDistanceFromLeftCalculator(currentWindowRatio),
+    [currentWindowRatio]
+  );
+  const mainCharacterSize = useMemo(
+    () => mainCharacterSizeCalculator(windowHeight, windowWidth),
+    [windowWidth, windowHeight]
+  );
+  const mainCharacterDistanceFromBottom = useMemo(
+    () =>
+      mainCharacterDistanceFromBottomCalculator(
+        windowWidth,
+        windowHeight,
+        leftMountain.height
+      ),
+    [windowWidth, windowHeight, leftMountain.height]
+  );
   // states
   const [plantAnimationStates, setPlantAnimationStates] = useState(() => {
-    return plantCoordinates.map(() => false);
+    return filteredPlants.map(() => false);
   });
+  // we set this to true so the window resize plant function doesnt trigger before the animation starts
+  const [plantAnimationInProgress, setPlantAnimationInProgress] = useState(
+    true
+  );
+  const [houseAnimationFinished, setHouseAnimationFinished] = useState(false);
   // refs
   const plantAnimationInterval = useRef(null);
   const plantAnimationIndex = useRef(0);
 
+  // useEffect(() => {
+  //   if(filteredPlants.length<plantAnimationStates.length){
+
+  //   }
+  // }, [filteredPlants]);
+
   useEffect(() => {
     if (groundAnimationFinished) {
+      const plantStateIncrementValue = plantStateIncrementValueCalculator(
+        plantAnimationStates.length
+      );
       const plantAnimationIntervalId = setInterval(() => {
-        if (plantAnimationIndex.current > plantCoordinates.length - 1) {
+        if (plantAnimationIndex.current > plantAnimationStates.length - 1) {
+          setPlantAnimationStates((previousState) => {
+            return filteredPlantsUpdate(
+              windowHeight,
+              windowWidth,
+              leftMountain.height,
+              numberToBoolean(
+                windowHeight / windowWidth - initialWindowRatio.current
+              ),
+              previousState
+            );
+          });
+          setPlantAnimationInProgress(false);
+
           return clearInterval(plantAnimationInterval.current);
         }
 
         return setPlantAnimationStates((prevState) => {
           const newPlantState = [...prevState];
 
-          newPlantState[plantAnimationIndex.current] = true;
-          plantAnimationIndex.current += 1;
+          for (
+            let i = plantAnimationIndex.current;
+            i < plantAnimationIndex.current + plantStateIncrementValue;
+            i += 1
+          ) {
+            newPlantState[i] = true;
+          }
+
+          plantAnimationIndex.current += plantStateIncrementValue;
 
           return newPlantState;
         });
@@ -58,20 +163,58 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
     return () => {
       clearInterval(plantAnimationInterval.current);
     };
-  }, [plantAnimationStates.length, groundAnimationFinished]);
+  }, [groundAnimationFinished]);
+  useEffect(() => {
+    if (!plantAnimationInProgress) {
+      setPlantAnimationStates((previousState) => {
+        return filteredPlantsUpdate(
+          windowHeight,
+          windowWidth,
+          leftMountain.height,
+          numberToBoolean(
+            windowHeight / windowWidth - previousWindowRatio.current
+          ),
+          previousState
+        );
+      });
+    }
+
+    previousWindowRatio.current = windowHeight / windowWidth;
+  }, [windowWidth, windowHeight]);
 
   return (
     <StyledBottomPart>
-      {plantCoordinates.map((plant, plantIndex) => (
-        <PlantComponent
-          key={plant.id}
-          animationCanBeStarted={plantAnimationStates[plantIndex]}
-          plantDistanceFromLeft={plant.left}
-          plantDistanceFromTop={plant.top}
-          plantType={plant.type}
-          plantWidth={plant.width}
+      {plantAnimationStates.map((animationCanBeStarted, plantIndex) => {
+        return (
+          <PlantComponent
+            key={plantCoordinates[plantIndex].id}
+            animationCanBeStarted={animationCanBeStarted}
+            plantDistanceFromLeft={plantCoordinates[plantIndex].left}
+            plantDistanceFromTop={plantCoordinates[plantIndex].top}
+            plantType={plantCoordinates[plantIndex].type}
+            plantWidth={plantCoordinates[plantIndex].width}
+          />
+        );
+      })}
+      {!plantAnimationInProgress && (
+        <HouseAnimation
+          setHouseAnimationFinished={setHouseAnimationFinished}
+          logDistanceFromLeft={logDistanceFromLeft}
+          houseLogSize={houseLogSize}
+          houseLogDistanceFromTop={houseLogDistanceFromTop}
+          leftMountain={leftMountain}
         />
-      ))}
+      )}
+      {!plantAnimationInProgress && (
+        <MainCharacter
+          leftMountain={leftMountain}
+          windowWidth={windowWidth}
+          windowHeight={windowHeight}
+          mainCharacterSize={mainCharacterSize}
+          mainCharacterDistanceFromBottom={mainCharacterDistanceFromBottom}
+        />
+      )}
+
       <GroundBottomPartBackground />
     </StyledBottomPart>
   );

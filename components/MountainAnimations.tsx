@@ -9,6 +9,7 @@ import {
 import useWindowSize from "../hooks/useWindowSize";
 import LeftMountain from "../public/LeftMountain.svg";
 import RightMountain from "../public/RightMountain.svg";
+import { round } from "../functions/utilityFunctions";
 
 interface StyledMountainProps {
   width: number;
@@ -73,7 +74,7 @@ const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
           <StyledMountain
             style={props}
             width={rightMountain.width}
-            top={5 + leftMountain.height - rightMountain.height}
+            top={round(5 + leftMountain.height - rightMountain.height)}
           >
             <RightMountain />
           </StyledMountain>
