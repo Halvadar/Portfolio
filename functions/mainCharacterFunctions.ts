@@ -31,21 +31,23 @@ export const mainCharacterSizeCalculator = (
   };
 };
 
-export const mainCharacterDistanceFromBottomCalculator = (
+export const mainCharacterDistanceFromTopCalculator = (
   windowWidth: number,
   windowHeight: number,
-  leftMountainHeight: number
+  leftMountainHeight: number,
+  mainCharacterHeight: number
 ) => {
   const groundVisiblePartHeight = round(
     windowHeight * (1 - 0.05 - leftMountainHeight / 100)
   );
   const groundBottomPartHeight = windowWidth * groundBottomPartRatio;
 
-  const mainCharacterDistanceFromBottom = round(
-    ((groundBottomPartHeight - groundVisiblePartHeight * 0.9) /
+  const mainCharacterDistanceFromTop = round(
+    ((groundVisiblePartHeight * 0.9 -
+      (mainCharacterHeight / 100) * groundBottomPartHeight) /
       groundBottomPartHeight) *
       100
   );
 
-  return mainCharacterDistanceFromBottom;
+  return mainCharacterDistanceFromTop;
 };

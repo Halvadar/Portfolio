@@ -8,6 +8,7 @@ import useWindowSize from "../hooks/useWindowSize";
 import {
   filteredPlantsUpdate,
   plantFilter,
+  plantHouseCharacterFilter,
   plantStateIncrementValueCalculator,
 } from "../functions/plantFilter";
 import { numberToBoolean } from "../functions/utilityFunctions";
@@ -18,7 +19,7 @@ import {
   logDistanceFromLeftCalculator,
 } from "../functions/houseFunctions";
 import {
-  mainCharacterDistanceFromBottomCalculator,
+  mainCharacterDistanceFromTopCalculator,
   mainCharacterSizeCalculator,
 } from "../functions/mainCharacterFunctions";
 // styled
@@ -64,6 +65,7 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
     () => houseLogSizeCalculator(windowHeight, windowWidth),
     [windowHeight, windowWidth]
   );
+
   const houseLogDistanceFromTop = useMemo(
     () =>
       houseLogDistanceFromTopCalculator(
@@ -81,23 +83,42 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
       houseLogSize.log.height,
     ]
   );
+  const halfHouseDistanceFromTop =
+    houseLogDistanceFromTop.houseDistanceFromTop +
+    houseLogSize.house.height / 2;
+  const halfLogDistanceFromTop =
+    houseLogDistanceFromTop.logDistanceFromTop + houseLogSize.log.height / 2;
+  const houseWholeDistanceFromTop =
+    houseLogDistanceFromTop.houseDistanceFromTop + houseLogSize.house.height;
+  const logWholeDistanceFromTop =
+    houseLogDistanceFromTop.houseDistanceFromTop + houseLogSize.house.height;
   const logDistanceFromLeft = useMemo(
     () => logDistanceFromLeftCalculator(currentWindowRatio),
     [currentWindowRatio]
   );
+  const logWholeDistanceFromLeft = logDistanceFromLeft + houseLogSize.log.width;
+  const houseWholeDistanceFromLeft = 10 + houseLogSize.house.width;
   const mainCharacterSize = useMemo(
     () => mainCharacterSizeCalculator(windowHeight, windowWidth),
     [windowWidth, windowHeight]
   );
-  const mainCharacterDistanceFromBottom = useMemo(
+
+  const mainCharacterDistanceFromTop = useMemo(
     () =>
-      mainCharacterDistanceFromBottomCalculator(
+      mainCharacterDistanceFromTopCalculator(
         windowWidth,
         windowHeight,
-        leftMountain.height
+        leftMountain.height,
+        mainCharacterSize.height
       ),
-    [windowWidth, windowHeight, leftMountain.height]
+    [windowWidth, windowHeight, leftMountain.height, mainCharacterSize.height]
   );
+  const halfCharacterDistanceFromTop =
+    mainCharacterDistanceFromTop + mainCharacterSize.height / 2;
+  const characterWholeDistanceFromTop =
+    mainCharacterDistanceFromTop + mainCharacterSize.height;
+  const characterDistanceFromLeft = 50 - mainCharacterSize.width / 4;
+  const characterWholeDistanceFromLeft = 50 + mainCharacterSize.width / 4;
   // states
   const [plantAnimationStates, setPlantAnimationStates] = useState(() => {
     return filteredPlants.map(() => false);
@@ -116,8 +137,11 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
 
   //   }
   // }, [filteredPlants]);
+  const asd = useRef();
 
   useEffect(() => {
+    console.log(asd.current);
+
     if (groundAnimationFinished) {
       const plantStateIncrementValue = plantStateIncrementValueCalculator(
         plantAnimationStates.length
@@ -185,14 +209,41 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
   return (
     <StyledBottomPart>
       {plantAnimationStates.map((animationCanBeStarted, plantIndex) => {
+        const plant = plantCoordinates[plantIndex];
+
+        if (
+          plantHouseCharacterFilter(
+            10,
+            houseWholeDistanceFromLeft,
+            halfHouseDistanceFromTop,
+            houseWholeDistanceFromTop,
+            halfLogDistanceFromTop,
+            logWholeDistanceFromTop,
+            logDistanceFromLeft,
+            logWholeDistanceFromLeft,
+            halfCharacterDistanceFromTop,
+            characterWholeDistanceFromTop,
+            characterDistanceFromLeft,
+            characterWholeDistanceFromLeft,
+            plant.width,
+            plant.type,
+            plant.left,
+            plant.top,
+            windowWidth,
+            windowHeight
+          )
+        ) {
+          return null;
+        }
+
         return (
           <PlantComponent
-            key={plantCoordinates[plantIndex].id}
+            key={plant.id}
             animationCanBeStarted={animationCanBeStarted}
-            plantDistanceFromLeft={plantCoordinates[plantIndex].left}
-            plantDistanceFromTop={plantCoordinates[plantIndex].top}
-            plantType={plantCoordinates[plantIndex].type}
-            plantWidth={plantCoordinates[plantIndex].width}
+            plantDistanceFromLeft={plant.left}
+            plantDistanceFromTop={plant.top}
+            plantType={plant.type}
+            plantWidth={plant.width}
           />
         );
       })}
@@ -211,11 +262,11 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
           windowWidth={windowWidth}
           windowHeight={windowHeight}
           mainCharacterSize={mainCharacterSize}
-          mainCharacterDistanceFromBottom={mainCharacterDistanceFromBottom}
+          mainCharacterDistanceFromTop={mainCharacterDistanceFromTop}
         />
       )}
 
-      <GroundBottomPartBackground />
+      <GroundBottomPartBackground ref={asd} />
     </StyledBottomPart>
   );
 };

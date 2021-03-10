@@ -1,11 +1,9 @@
 //  height width ratios
 import plantCoordinates from "../public/plantCoordinateList";
 import { round } from "./utilityFunctions";
+import ratios from "../constants";
 
-const mushroomRatio = 1.31;
-const flowerRatio = 1.88;
-const grassRatio = 0.6;
-const groundRatio = 2.18;
+const { mushroomRatio, flowerRatio, grassRatio, groundRatio } = ratios;
 
 const plantTypeRatio = (type) => {
   switch (type) {
@@ -114,4 +112,73 @@ export const plantStateIncrementValueCalculator = (
 
   return 1;
 };
-export const plantHouseCharacterFilter = () => {};
+export const plantHouseCharacterFilter = (
+  houseDistanceFromLeft: number,
+  houseWholeDistanceFromLeft: number,
+  halfHouseDistanceFromTop: number,
+  houseWholeDistanceFromTop: number,
+  halfLogDistanceFromTop: number,
+  logWholeDistanceFromTop: number,
+  logDistanceFromLeft: number,
+  logWholeDistanceFromLeft: number,
+  halfCharacterDistanceFromTop: number,
+  characterWholeDistanceFromTop: number,
+  characterDistanceFromLeft: number,
+  characterWholeDistanceFromLeft: number,
+  plantWidth: number,
+  plantType: number,
+  plantDistanceFromLeft: number,
+  plantDistanceFromTop: number,
+  windowWidth: number,
+  windowHeight: number
+) => {
+  // every height prop is in halfs
+  const plantHeight = round(
+    ((((windowWidth * plantWidth) / 100) * plantTypeRatio(plantType)) /
+      windowHeight) *
+      100
+  );
+  const plantWholeDistanceFromLeft = plantDistanceFromLeft + plantHeight;
+  const plantWholeDistanceFromTop = plantDistanceFromTop + plantHeight;
+
+  if (
+    ((plantWholeDistanceFromLeft > houseDistanceFromLeft &&
+      plantWholeDistanceFromLeft < houseWholeDistanceFromLeft) ||
+      (plantDistanceFromLeft > houseDistanceFromLeft &&
+        plantDistanceFromLeft < houseWholeDistanceFromLeft)) &&
+    ((plantWholeDistanceFromTop > halfHouseDistanceFromTop &&
+      plantWholeDistanceFromTop < houseWholeDistanceFromTop) ||
+      (plantDistanceFromTop > halfHouseDistanceFromTop &&
+        plantDistanceFromTop < houseWholeDistanceFromTop))
+  ) {
+    return true;
+  }
+
+  if (
+    ((plantWholeDistanceFromLeft > logDistanceFromLeft &&
+      plantWholeDistanceFromLeft < logWholeDistanceFromLeft) ||
+      (plantDistanceFromLeft > logDistanceFromLeft &&
+        plantDistanceFromLeft < logWholeDistanceFromLeft)) &&
+    ((plantWholeDistanceFromTop > halfLogDistanceFromTop &&
+      plantWholeDistanceFromTop < logWholeDistanceFromTop) ||
+      (plantDistanceFromTop > halfLogDistanceFromTop &&
+        plantDistanceFromTop < logWholeDistanceFromTop))
+  ) {
+    return true;
+  }
+
+  if (
+    ((plantWholeDistanceFromLeft > characterDistanceFromLeft &&
+      plantWholeDistanceFromLeft < characterWholeDistanceFromLeft) ||
+      (plantDistanceFromLeft > characterDistanceFromLeft &&
+        plantDistanceFromLeft < characterWholeDistanceFromLeft)) &&
+    ((plantWholeDistanceFromTop > halfCharacterDistanceFromTop &&
+      plantWholeDistanceFromTop < characterWholeDistanceFromTop) ||
+      (plantDistanceFromTop > halfCharacterDistanceFromTop &&
+        plantDistanceFromTop < characterWholeDistanceFromTop))
+  ) {
+    return true;
+  }
+
+  return false;
+};
