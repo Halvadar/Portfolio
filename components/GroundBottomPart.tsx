@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import plantCoordinates from "../public/plantCoordinateList";
-import GroundBottomPartBackground from "../public/GroundBottomPartBackground.svg";
+import GroundBottomPartBackground from "../public/GroundBottomPartBackground";
 import PlantComponent from "./PlantComponent";
 import HouseAnimation from "./HouseAnimation";
 import useWindowSize from "../hooks/useWindowSize";
@@ -22,6 +22,7 @@ import {
   mainCharacterDistanceFromTopCalculator,
   mainCharacterSizeCalculator,
 } from "../functions/mainCharacterFunctions";
+
 // styled
 // We give top -4px because top and bottom part have space left between them
 
@@ -132,16 +133,7 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
   const plantAnimationInterval = useRef(null);
   const plantAnimationIndex = useRef(0);
 
-  // useEffect(() => {
-  //   if(filteredPlants.length<plantAnimationStates.length){
-
-  //   }
-  // }, [filteredPlants]);
-  const asd = useRef();
-
   useEffect(() => {
-    console.log(asd.current);
-
     if (groundAnimationFinished) {
       const plantStateIncrementValue = plantStateIncrementValueCalculator(
         plantAnimationStates.length
@@ -266,7 +258,7 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
         />
       )}
 
-      <GroundBottomPartBackground ref={asd} />
+      <GroundBottomPartBackground />
     </StyledBottomPart>
   );
 };

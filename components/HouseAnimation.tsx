@@ -2,8 +2,8 @@ import React, { useMemo } from "react";
 import { Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import Lottie from "react-lottie";
-import House from "../public/House.svg";
-import Log from "../public/Log.svg";
+import House from "../public/House";
+import Log from "../public/Log";
 import Smoke from "../public/Smoke.json";
 import useWindowSize from "../hooks/useWindowSize";
 

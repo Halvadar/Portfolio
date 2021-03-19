@@ -1,9 +1,12 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import Lottie from "react-lottie";
-import Man from "../public/Man.svg";
+import { animated, useSpring } from "react-spring";
+import Man from "../public/Man";
 import Dog from "../public/Dog.json";
+import Fire from "../public/Fire.json";
+import { isDayContext } from "./Header";
 
 interface StyledMainCharacterProps {
   width: number;
@@ -26,6 +29,13 @@ const StyledDog = styled.div`
   bottom: 10%;
   left: -40%;
   z-index: 3;
+`;
+
+const StyledFire = styled(animated.div)`
+  position: absolute;
+  bottom: 4%;
+  z-index: 3;
+  transform: translate(-55%, 0);
 `;
 
 interface MainCharacterProps {
@@ -51,6 +61,15 @@ const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  const fireDefaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: Fire,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+  const isDay = useContext(isDayContext);
 
   return (
     <Spring
@@ -65,6 +84,14 @@ const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
             <Lottie options={dogDefaultOptions} />
           </StyledDog>
           <Man />
+
+          <Spring from={{ width: "0%" }} to={{ width: isDay ? "0%" : "25%" }}>
+            {(style) => (
+              <StyledFire style={style}>
+                <Lottie options={fireDefaultOptions} />
+              </StyledFire>
+            )}
+          </Spring>
         </StyledMainCharacter>
       )}
     </Spring>

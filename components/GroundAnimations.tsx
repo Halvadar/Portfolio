@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import GroundBottomPart from "./GroundBottomPart";
 import GroundTopPart from "./GroundTopPart";
@@ -7,7 +7,7 @@ import SpringWrapper from "./SpringWrapper";
 const StyledGround = styled.div`
   width: 100%;
   position: absolute;
-  z-index: 1;
+  z-index: 2;
 `;
 
 interface GroundAnimationsProps {

@@ -1,15 +1,37 @@
-import React, { useMemo } from "react";
+import React, { useContext, useMemo } from "react";
 import { animated } from "react-spring";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Spring } from "react-spring/renderprops.cjs";
-import {
-  mountainDistanceFromSidesCalculator,
-  mountainWidthsCalculator,
-} from "../functions/mountainFunctions";
+import { mountainDistanceFromSidesCalculator } from "../functions/mountainFunctions";
 import useWindowSize from "../hooks/useWindowSize";
-import LeftMountain from "../public/LeftMountain.svg";
-import RightMountain from "../public/RightMountain.svg";
+import LeftMountain from "../public/LeftMountain";
+import RightMountain from "../public/RightMountain";
+import Cloud from "../public/Cloud";
+import Star from "../public/Star";
 import { round } from "../functions/utilityFunctions";
+import { cloudStarPropsCalculator } from "../functions/cloudFunctions";
+import starCoordinates from "../public/starCoordinates";
+import { isDayContext } from "./Header";
+
+interface StyledCloudStarProps {
+  width?: number;
+  top: number;
+  left?: number;
+}
+
+const StyledCloud = styled.div<StyledCloudStarProps>`
+  position: absolute;
+  width: ${(props) => `${props.width}%`};
+  top: ${(props) => `${props.top}%`};
+  z-index: 2;
+`;
+
+const StyledStar = styled.div<StyledCloudStarProps>`
+  position: absolute;
+  top: ${(props) => `${props.top}%`};
+  left: ${(props) => `${props.left}%`};
+  z-index: 0;
+`;
 
 interface StyledMountainProps {
   width: number;
@@ -21,6 +43,7 @@ interface StyledMountainProps {
 const StyledMountain = styled(animated.div)<StyledMountainProps>`
   width: ${(props: StyledMountainProps) => `${props.width}%`};
   position: absolute;
+  z-index: 1;
   top: ${(props: StyledMountainProps) => `${props.top}%`};
   left: ${(props: StyledMountainProps) =>
     props.left ? `${props.left}%` : null};
@@ -32,13 +55,23 @@ const StyledMountain = styled(animated.div)<StyledMountainProps>`
 `;
 
 interface MountainAnimationsProps {
+  windowHeight: number;
+  windowWidth: number;
+  windowHeightIsGreater: boolean;
   leftMountain: { width: number; height: number };
   rightMountain: { width: number; height: number };
+  setMountainAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  mountainAnimationFinished: boolean;
 }
 
 const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
+  windowHeight,
+  windowWidth,
+  windowHeightIsGreater,
   leftMountain,
   rightMountain,
+  setMountainAnimationFinished,
+  mountainAnimationFinished,
 }) => {
   const mountainDistanceFromSides = useMemo<number>(
     () =>
@@ -48,12 +81,24 @@ const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
       }),
     [leftMountain, rightMountain]
   );
+  const cloudStarProps = useMemo(
+    () =>
+      cloudStarPropsCalculator(
+        windowHeight,
+        windowWidth,
+        leftMountain.height,
+        windowHeightIsGreater
+      ),
+    [windowHeight, windowWidth, leftMountain.height, windowHeightIsGreater]
+  );
+  const isDay = useContext(isDayContext);
 
   return (
     <>
       <Spring
         from={{ left: `-${leftMountain.width}%` }}
         to={{ left: `${mountainDistanceFromSides}%` }}
+        onRest={() => setMountainAnimationFinished(true)}
       >
         {(props) => (
           <StyledMountain
@@ -80,6 +125,38 @@ const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
           </StyledMountain>
         )}
       </Spring>
+      {mountainAnimationFinished &&
+        cloudStarProps.cloudCoordinates.map((cloud) => {
+          const { left, top, width, id } = cloud;
+
+          return (
+            <Spring key={id} from={{ left: "-10%" }} to={{ left: `${left}%` }}>
+              {(props) => (
+                <StyledCloud style={props} top={top} width={width}>
+                  <Cloud />
+                </StyledCloud>
+              )}
+            </Spring>
+          );
+        })}
+      {mountainAnimationFinished &&
+        cloudStarProps.starCoordinates.map((star) => {
+          const { left, top, width, id } = star;
+
+          return (
+            <Spring
+              key={id}
+              from={{ width: "0%" }}
+              to={{ width: isDay ? "0%" : `${width}%` }}
+            >
+              {(props) => (
+                <StyledStar style={props} left={left} top={top}>
+                  <Star />
+                </StyledStar>
+              )}
+            </Spring>
+          );
+        })}
     </>
   );
 };

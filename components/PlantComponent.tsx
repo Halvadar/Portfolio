@@ -1,9 +1,9 @@
 import React from "react";
 import { Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
-import Flower from "../public/Flower.svg";
-import Mushroom from "../public/Mushroom.svg";
-import Grass from "../public/Grass.svg";
+import Flower from "../public/Flower";
+import Mushroom from "../public/Mushroom";
+import Grass from "../public/Grass";
 
 interface StyledPlantProps {
   left: number;

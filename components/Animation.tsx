@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { mountainWidthsCalculator } from "../functions/mountainFunctions";
 import useWindowSize from "../hooks/useWindowSize";
 import GroundAnimations from "./GroundAnimations";
+import MoonAnimation from "./MoonAnimation";
 import MountainAnimations from "./MountainAnimations";
 import SunAnimation from "./SunAnimation";
 
@@ -44,7 +45,14 @@ const Animation: React.FunctionComponent<AnimationProps> = ({}) => {
 
   return (
     <StyledAnimation>
-      <MountainAnimations {...mountainProps} />
+      <MountainAnimations
+        windowWidth={windowWidth}
+        windowHeightIsGreater={windowHeightIsGreater}
+        windowHeight={windowHeight}
+        setMountainAnimationFinished={setMountainAnimationFinished}
+        {...mountainProps}
+        mountainAnimationFinished={mountainAnimationFinished}
+      />
 
       <GroundAnimations
         setGroundAnimationFinished={setGroundAnimationFinished}
@@ -54,6 +62,10 @@ const Animation: React.FunctionComponent<AnimationProps> = ({}) => {
         leftMountain={mountainProps.leftMountain}
       />
       <SunAnimation
+        leftMountainHeight={mountainProps.leftMountain.height}
+        groundAnimationFinished={groundAnimationFinished}
+      />
+      <MoonAnimation
         leftMountainHeight={mountainProps.leftMountain.height}
         groundAnimationFinished={groundAnimationFinished}
       />

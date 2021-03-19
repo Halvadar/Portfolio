@@ -1,18 +1,21 @@
 import React, { useContext } from "react";
 import { Spring } from "react-spring/renderprops.cjs";
 import styled, { keyframes } from "styled-components";
-import Sun from "../public/Sun";
+import Moon from "../public/Moon";
 import { isDayContext } from "./Header";
 
-const StyledSun = styled.div`
-  width: 6%;
+const StyledMoon = styled.div`
+  width: 4%;
   position: absolute;
-  left: 5%;
+  right: 5%;
   z-index: 0;
+  > svg {
+    display: block;
+  }
 `;
 const shadowAnimation = keyframes`
-from{box-shadow: 0 0 70px 30px #ffffff};
-to{box-shadow: 0 0 70px 40px #ffffff}
+from{box-shadow: 0 0 70px 30px #b3aeff};
+to{box-shadow: 0 0 70px 40px #b3aeff}
 `;
 const GlowingEffect = styled.div`
   position: absolute;
@@ -21,12 +24,12 @@ const GlowingEffect = styled.div`
   animation: ${shadowAnimation} 2s linear 0s infinite alternate;
 `;
 
-interface SunAnimationProps {
+interface MoonAnimationProps {
   leftMountainHeight: number;
   groundAnimationFinished: boolean;
 }
 
-const SunAnimation: React.FunctionComponent<SunAnimationProps> = ({
+const MoonAnimation: React.FunctionComponent<MoonAnimationProps> = ({
   leftMountainHeight,
   groundAnimationFinished,
 }) => {
@@ -37,13 +40,13 @@ const SunAnimation: React.FunctionComponent<SunAnimationProps> = ({
       {groundAnimationFinished ? (
         <Spring
           from={{ top: `${leftMountainHeight + 10}%` }}
-          to={{ top: isDay ? "5%" : `${leftMountainHeight + 10}%` }}
+          to={{ top: !isDay ? "5%" : `${leftMountainHeight + 10}%` }}
         >
           {(props) => (
-            <StyledSun style={props}>
-              <Sun />
-              {isDay && <GlowingEffect />}
-            </StyledSun>
+            <StyledMoon style={props}>
+              <Moon />
+              {!isDay && <GlowingEffect />}
+            </StyledMoon>
           )}
         </Spring>
       ) : null}
@@ -51,4 +54,4 @@ const SunAnimation: React.FunctionComponent<SunAnimationProps> = ({
   );
 };
 
-export default SunAnimation;
+export default MoonAnimation;

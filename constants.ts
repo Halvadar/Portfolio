@@ -9,6 +9,7 @@ const ratios = {
   flowerRatio: 1.88,
   grassRatio: 0.6,
   groundRatio: 2.18,
+  cloudRatio: 0.45,
 };
 
 export default ratios;
