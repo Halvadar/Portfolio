@@ -7,13 +7,14 @@ const { mainCharacterRatio, groundBottomPartRatio } = ratios;
 export const mainCharacterSizeCalculator = (
   windowHeight: number,
   windowWidth: number
-): { width: number; height: number } => {
+): { width: number; height: number; heightForPlants: number } => {
   const windowHeightWidthRatio = windowHeight / windowWidth;
 
   if (windowHeightWidthRatio < 0.8) {
     return {
       width: 25,
-      height: ((0.25 * mainCharacterRatio) / groundBottomPartRatio) * 100,
+      height: round((25 * mainCharacterRatio) / windowHeightWidthRatio),
+      heightForPlants: round((25 * mainCharacterRatio) / groundBottomPartRatio),
     };
   }
 
@@ -21,12 +22,14 @@ export const mainCharacterSizeCalculator = (
   const mainCharacterWidth = round(windowHeightWidthRatio) * 2 * 20;
 
   // we find the height based on ground and house height-width ratios. the house height is it's width in pixels multiplied by its ratio and divided by the bottom part height in pixels which we find by the product of its width and its ratio . windowWidths are removed from both sides.
+
   return {
     width: mainCharacterWidth,
     height: round(
-      (((mainCharacterWidth / 100) * mainCharacterRatio) /
-        groundBottomPartRatio) *
-        100
+      (mainCharacterWidth * mainCharacterRatio) / windowHeightWidthRatio
+    ),
+    heightForPlants: round(
+      (mainCharacterWidth * mainCharacterRatio) / groundBottomPartRatio
     ),
   };
 };
@@ -35,7 +38,8 @@ export const mainCharacterDistanceFromTopCalculator = (
   windowWidth: number,
   windowHeight: number,
   leftMountainHeight: number,
-  mainCharacterHeight: number
+  mainCharacterHeight: number,
+  mainCharacterHeightForPlants: number
 ) => {
   const groundVisiblePartHeight = round(
     windowHeight * (1 - 0.05 - leftMountainHeight / 100)
@@ -43,11 +47,22 @@ export const mainCharacterDistanceFromTopCalculator = (
   const groundBottomPartHeight = windowWidth * groundBottomPartRatio;
 
   const mainCharacterDistanceFromTop = round(
+    ((windowHeight -
+      groundVisiblePartHeight * 0.1 -
+      (mainCharacterHeight / 100) * windowHeight) /
+      windowHeight) *
+      100
+  );
+
+  const mainCharacterDistanceFromTopForPlants = round(
     ((groundVisiblePartHeight * 0.9 -
-      (mainCharacterHeight / 100) * groundBottomPartHeight) /
+      (mainCharacterHeightForPlants / 100) * groundBottomPartHeight) /
       groundBottomPartHeight) *
       100
   );
 
-  return mainCharacterDistanceFromTop;
+  return {
+    mainCharacterDistanceFromTop,
+    mainCharacterDistanceFromTopForPlants,
+  };
 };

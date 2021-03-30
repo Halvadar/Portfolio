@@ -1,16 +1,13 @@
 import React, { useContext, useMemo } from "react";
-import { animated } from "react-spring";
-import styled, { keyframes } from "styled-components";
-import { Spring } from "react-spring/renderprops.cjs";
+import { animated, Spring } from "react-spring/renderprops.cjs";
+import styled from "styled-components";
 import { mountainDistanceFromSidesCalculator } from "../functions/mountainFunctions";
-import useWindowSize from "../hooks/useWindowSize";
 import LeftMountain from "../public/LeftMountain";
 import RightMountain from "../public/RightMountain";
 import Cloud from "../public/Cloud";
 import Star from "../public/Star";
 import { round } from "../functions/utilityFunctions";
 import { cloudStarPropsCalculator } from "../functions/cloudFunctions";
-import starCoordinates from "../public/starCoordinates";
 import { isDayContext } from "./Header";
 
 interface StyledCloudStarProps {
@@ -19,14 +16,14 @@ interface StyledCloudStarProps {
   left?: number;
 }
 
-const StyledCloud = styled.div<StyledCloudStarProps>`
+const StyledCloud = styled(animated.div)<StyledCloudStarProps>`
   position: absolute;
   width: ${(props) => `${props.width}%`};
   top: ${(props) => `${props.top}%`};
   z-index: 2;
 `;
 
-const StyledStar = styled.div<StyledCloudStarProps>`
+const StyledStar = styled(animated.div)<StyledCloudStarProps>`
   position: absolute;
   top: ${(props) => `${props.top}%`};
   left: ${(props) => `${props.left}%`};
@@ -94,7 +91,7 @@ const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
   const isDay = useContext(isDayContext);
 
   return (
-    <>
+    <div style={{ height: "100%" }}>
       <Spring
         from={{ left: `-${leftMountain.width}%` }}
         to={{ left: `${mountainDistanceFromSides}%` }}
@@ -157,7 +154,7 @@ const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
             </Spring>
           );
         })}
-    </>
+    </div>
   );
 };
 

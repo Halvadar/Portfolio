@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
-import { Spring } from "react-spring/renderprops.cjs";
+import { animated, Spring } from "react-spring/renderprops.cjs";
 import styled, { keyframes } from "styled-components";
 import Sun from "../public/Sun";
 import { isDayContext } from "./Header";
 
-const StyledSun = styled.div`
+const StyledSun = styled(animated.div)`
   width: 6%;
   position: absolute;
   left: 5%;
@@ -36,8 +36,11 @@ const SunAnimation: React.FunctionComponent<SunAnimationProps> = ({
     <>
       {groundAnimationFinished ? (
         <Spring
+          native
           from={{ top: `${leftMountainHeight + 10}%` }}
-          to={{ top: isDay ? "5%" : `${leftMountainHeight + 10}%` }}
+          to={{
+            top: isDay ? "5%" : `${leftMountainHeight + 10}%`,
+          }}
         >
           {(props) => (
             <StyledSun style={props}>

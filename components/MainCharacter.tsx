@@ -1,8 +1,8 @@
-import React, { useContext, useMemo } from "react";
-import { Spring } from "react-spring/renderprops.cjs";
+import React, { useContext } from "react";
+
+import { interpolate, Spring, animated } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import Lottie from "react-lottie";
-import { animated, useSpring } from "react-spring";
 import Man from "../public/Man";
 import Dog from "../public/Dog.json";
 import Fire from "../public/Fire.json";
@@ -12,7 +12,7 @@ interface StyledMainCharacterProps {
   width: number;
 }
 
-const StyledMainCharacter = styled.div<StyledMainCharacterProps>`
+const StyledMainCharacter = styled(animated.div)<StyledMainCharacterProps>`
   position: absolute;
   width: ${(props) => `${props.width}%`};
   left: 50%;
@@ -39,19 +39,15 @@ const StyledFire = styled(animated.div)`
 `;
 
 interface MainCharacterProps {
-  windowWidth: number;
-  windowHeight: number;
-  leftMountain: { width: number; height: number };
   mainCharacterDistanceFromTop: number;
   mainCharacterSize: { width: number; height: number };
+  focused?: boolean;
 }
 
 const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
-  windowWidth,
-  windowHeight,
-  leftMountain,
   mainCharacterDistanceFromTop,
   mainCharacterSize,
+  focused,
 }) => {
   const dogDefaultOptions = {
     loop: true,
@@ -73,13 +69,27 @@ const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
 
   return (
     <Spring
+      native
       from={{
         top: `${mainCharacterDistanceFromTop + mainCharacterSize.height}%`,
+        filterProp: 0,
       }}
-      to={{ top: `${mainCharacterDistanceFromTop}%` }}
+      to={{
+        top: `${mainCharacterDistanceFromTop}%`,
+        filterProp: focused ? 0 : 1,
+      }}
     >
-      {(props) => (
-        <StyledMainCharacter style={props} width={mainCharacterSize.width}>
+      {({ top, filterProp }) => (
+        <StyledMainCharacter
+          style={{
+            top: top,
+            filter: interpolate(
+              [filterProp],
+              (filterP) => `blur(${filterP * 4}px)`
+            ),
+          }}
+          width={mainCharacterSize.width}
+        >
           <StyledDog>
             <Lottie options={dogDefaultOptions} />
           </StyledDog>

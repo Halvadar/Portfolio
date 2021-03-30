@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { animated, Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import GroundBottomPart from "./GroundBottomPart";
 import GroundTopPart from "./GroundTopPart";
-import SpringWrapper from "./SpringWrapper";
 
-const StyledGround = styled.div`
+const StyledGround = styled(animated.div)`
   width: 100%;
   position: absolute;
   z-index: 2;
@@ -16,6 +16,17 @@ interface GroundAnimationsProps {
   leftMountain: { height: number; width: number };
   groundAnimationFinished: boolean;
   setGroundAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  setPlantAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  mainCharacterDistanceFromTopForPlants: number;
+  mainCharacterWidth: number;
+  mainCharacterHeightForPlants: number;
+  houseWidth: number;
+  houseHeight: number;
+  logWidth: number;
+  logHeight: number;
+  houseDistanceFromTop: number;
+  logDistanceFromTop: number;
+  logDistanceFromLeft: number;
 }
 
 const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
@@ -24,51 +35,88 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
   leftMountain,
   groundAnimationFinished,
   setGroundAnimationFinished,
+  setPlantAnimationFinished,
+  mainCharacterDistanceFromTopForPlants,
+  mainCharacterHeightForPlants,
+  mainCharacterWidth,
+  houseWidth,
+  houseHeight,
+  logWidth,
+  logHeight,
+  houseDistanceFromTop,
+  logDistanceFromTop,
+  logDistanceFromLeft,
 }) => {
   const [
     groundTopPartBackgroundHeight,
     setGroundTopPartBackgroundHeight,
   ] = useState<number>(undefined);
 
-  return (
-    <>
-      <SpringWrapper
-        onRestCallback={setGroundAnimationFinished}
-        animationCanBeStarted={!!groundTopPartBackgroundHeight}
-        springProps={
-          groundTopPartBackgroundHeight
-            ? {
-                from: { top: "100%" },
-                to: {
-                  top: `${
-                    5 + leftMountain.height - groundTopPartBackgroundHeight
-                  }%`,
-                },
-              }
-            : null
-        }
-        render={(props) => {
-          return (
-            <StyledGround style={props}>
-              <GroundTopPart
-                windowWidth={windowWidth}
-                windowHeight={windowHeight}
-                leftMountain={leftMountain}
-                setGroundTopPartBackgroundHeight={
-                  setGroundTopPartBackgroundHeight
-                }
-              />
-              <GroundBottomPart
-                groundAnimationFinished={groundAnimationFinished}
-                windowWidth={windowWidth}
-                windowHeight={windowHeight}
-                leftMountain={leftMountain}
-              />
-            </StyledGround>
-          );
-        }}
+  return groundTopPartBackgroundHeight ? (
+    <Spring
+      native
+      from={{ top: "100%" }}
+      to={{
+        top: `${5 + leftMountain.height - groundTopPartBackgroundHeight}%`,
+      }}
+      onRest={() => setGroundAnimationFinished(true)}
+    >
+      {(props) => (
+        <StyledGround style={props}>
+          <GroundTopPart
+            windowWidth={windowWidth}
+            windowHeight={windowHeight}
+            setGroundTopPartBackgroundHeight={setGroundTopPartBackgroundHeight}
+          />
+          <GroundBottomPart
+            houseWidth={houseWidth}
+            houseHeight={houseHeight}
+            logWidth={logWidth}
+            logHeight={logHeight}
+            houseDistanceFromTop={houseDistanceFromTop}
+            logDistanceFromTop={logDistanceFromTop}
+            logDistanceFromLeft={logDistanceFromLeft}
+            mainCharacterDistanceFromTopForPlants={
+              mainCharacterDistanceFromTopForPlants
+            }
+            mainCharacterHeightForPlants={mainCharacterHeightForPlants}
+            mainCharacterWidth={mainCharacterWidth}
+            groundAnimationFinished={groundAnimationFinished}
+            windowWidth={windowWidth}
+            windowHeight={windowHeight}
+            leftMountain={leftMountain}
+            setPlantAnimationFinished={setPlantAnimationFinished}
+          />
+        </StyledGround>
+      )}
+    </Spring>
+  ) : (
+    <StyledGround>
+      <GroundTopPart
+        windowWidth={windowWidth}
+        windowHeight={windowHeight}
+        setGroundTopPartBackgroundHeight={setGroundTopPartBackgroundHeight}
       />
-    </>
+      <GroundBottomPart
+        houseWidth={houseWidth}
+        houseHeight={houseHeight}
+        logWidth={logWidth}
+        logHeight={logHeight}
+        houseDistanceFromTop={houseDistanceFromTop}
+        logDistanceFromTop={logDistanceFromTop}
+        logDistanceFromLeft={logDistanceFromLeft}
+        mainCharacterDistanceFromTopForPlants={
+          mainCharacterDistanceFromTopForPlants
+        }
+        mainCharacterHeightForPlants={mainCharacterHeightForPlants}
+        mainCharacterWidth={mainCharacterWidth}
+        groundAnimationFinished={groundAnimationFinished}
+        windowWidth={windowWidth}
+        windowHeight={windowHeight}
+        leftMountain={leftMountain}
+        setPlantAnimationFinished={setPlantAnimationFinished}
+      />
+    </StyledGround>
   );
 };
 

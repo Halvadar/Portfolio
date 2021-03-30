@@ -1,24 +1,24 @@
-import React, { useMemo } from "react";
-import { Spring } from "react-spring/renderprops.cjs";
+import React, { useContext } from "react";
+import { animated, interpolate, Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import Lottie from "react-lottie";
 import House from "../public/House";
 import Log from "../public/Log";
 import Smoke from "../public/Smoke.json";
-import useWindowSize from "../hooks/useWindowSize";
+import { AllAnimationFinished } from "./Header";
 
 interface StyledHouseLog {
   width: number;
   top: number;
 }
 
-const StyledHouse = styled.div<StyledHouseLog>`
+const StyledHouse = styled(animated.div)<StyledHouseLog>`
   position: absolute;
   width: ${(props) => `${props.width}%`};
   top: ${(props) => `${props.top}%`};
   z-index: 2;
 `;
-const StyledLog = styled.div<StyledHouseLog>`
+const StyledLog = styled(animated.div)<StyledHouseLog>`
   width: ${(props) => `${props.width}%`};
   top: ${(props) => `${props.top}%`};
   position: absolute;
@@ -41,18 +41,15 @@ interface HouseAnimationProps {
     logDistanceFromTop: number;
   };
   logDistanceFromLeft: number;
-  setHouseAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  focused: boolean;
 }
 
 const HouseAnimation: React.FunctionComponent<HouseAnimationProps> = ({
-  leftMountain,
   houseLogSize,
   houseLogDistanceFromTop,
   logDistanceFromLeft,
-  setHouseAnimationFinished,
+  focused,
 }) => {
-  const [windowWidth, windowHeight, windowHeightIsGreater] = useWindowSize();
-
   const smokeDefaultOptions = {
     loop: true,
     autoplay: true,
@@ -61,39 +58,50 @@ const HouseAnimation: React.FunctionComponent<HouseAnimationProps> = ({
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  const { setAllAnimationFinished } = useContext(AllAnimationFinished);
 
   return (
     <>
       <Spring
-        onRest={() => setHouseAnimationFinished(true)}
-        from={{ left: `-${houseLogSize.house.width}%` }}
-        to={{ left: "10%" }}
+        native
+        onRest={() => setAllAnimationFinished(true)}
+        from={{
+          left: `-${houseLogSize.house.width}%`,
+          filterProp: 0,
+          logLeft: `-${houseLogSize.log.width}%`,
+        }}
+        to={{
+          left: "10%",
+          filterProp: focused ? 0 : 1,
+          logLeft: `${logDistanceFromLeft}%`,
+        }}
       >
-        {(props) => (
-          <StyledHouse
-            top={houseLogDistanceFromTop.houseDistanceFromTop}
-            width={houseLogSize.house.width}
-            style={props}
-          >
-            <StyledSmoke>
-              <Lottie options={smokeDefaultOptions} />
-            </StyledSmoke>
-            <House />
-          </StyledHouse>
-        )}
-      </Spring>
-      <Spring
-        from={{ left: `-${houseLogSize.log.width}%` }}
-        to={{ left: `${logDistanceFromLeft}%` }}
-      >
-        {(props) => (
-          <StyledLog
-            top={houseLogDistanceFromTop.logDistanceFromTop}
-            width={houseLogSize.log.width}
-            style={props}
-          >
-            <Log />
-          </StyledLog>
+        {({ left, filterProp, logLeft }) => (
+          <>
+            <StyledHouse
+              top={houseLogDistanceFromTop.houseDistanceFromTop}
+              width={houseLogSize.house.width}
+              style={{
+                left: left,
+                filter: interpolate([filterProp], (s) => `blur(${s * 4}px)`),
+              }}
+            >
+              <StyledSmoke>
+                <Lottie options={smokeDefaultOptions} />
+              </StyledSmoke>
+              <House />
+            </StyledHouse>
+            <StyledLog
+              top={houseLogDistanceFromTop.logDistanceFromTop}
+              width={houseLogSize.log.width}
+              style={{
+                left: logLeft,
+                filter: interpolate([filterProp], (s) => `blur(${s * 4}px)`),
+              }}
+            >
+              <Log />
+            </StyledLog>
+          </>
         )}
       </Spring>
     </>

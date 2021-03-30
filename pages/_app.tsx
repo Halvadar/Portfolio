@@ -6,6 +6,4 @@ function App({ Component, pageProps }: AppProps) {
   return <Component {...pageProps} />;
 }
 
-const asd = 1;
-
 export default App;

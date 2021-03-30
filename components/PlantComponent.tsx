@@ -1,5 +1,5 @@
 import React from "react";
-import { Spring } from "react-spring/renderprops.cjs";
+import { animated, Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import Flower from "../public/Flower";
 import Mushroom from "../public/Mushroom";
@@ -10,7 +10,7 @@ interface StyledPlantProps {
   top: number;
 }
 
-const StyledPlant = styled.div<StyledPlantProps>`
+const StyledPlant = styled(animated.div)<StyledPlantProps>`
   position: absolute;
   left: ${(props: StyledPlantProps) => `${props.left}%`};
   top: ${(props: StyledPlantProps) => `${props.top}%`};
@@ -32,7 +32,7 @@ const PlantComponent: React.FunctionComponent<PlantComponentProps> = ({
   plantDistanceFromTop,
 }) =>
   animationCanBeStarted ? (
-    <Spring from={{ width: "0%" }} to={{ width: `${plantWidth}%` }}>
+    <Spring native from={{ width: "0%" }} to={{ width: `${plantWidth}%` }}>
       {(props) => {
         if (plantType === 0) {
           return (

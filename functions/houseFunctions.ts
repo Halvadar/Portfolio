@@ -7,8 +7,8 @@ export const houseLogSizeCalculator = (
   windowHeight: number,
   windowWidth: number
 ): {
-  house: { width: number; height: number };
-  log: { width: number; height: number };
+  house: { width: number; height: number; heightForPlants: number };
+  log: { width: number; height: number; heightForPlants: number };
 } => {
   const windowHeightWidthRatio = windowHeight / windowWidth;
 
@@ -16,11 +16,17 @@ export const houseLogSizeCalculator = (
     return {
       house: {
         width: 15,
-        height: round(((0.15 * houseRatio) / groundBottomPartRatio) * 100),
+        height: round(((0.15 * houseRatio) / windowHeightWidthRatio) * 100),
+        heightForPlants: round(
+          ((0.15 * houseRatio) / groundBottomPartRatio) * 100
+        ),
       },
       log: {
         width: 3,
-        height: round(((0.03 * logRatio) / groundBottomPartRatio) * 100),
+        height: round(((0.03 * logRatio) / windowHeightWidthRatio) * 100),
+        heightForPlants: round(
+          ((0.03 * logRatio) / groundBottomPartRatio) * 100
+        ),
       },
     };
   }
@@ -34,12 +40,18 @@ export const houseLogSizeCalculator = (
     house: {
       width: houseWidth,
       height: round(
+        (((houseWidth / 100) * houseRatio) / windowHeightWidthRatio) * 100
+      ),
+      heightForPlants: round(
         (((houseWidth / 100) * houseRatio) / groundBottomPartRatio) * 100
       ),
     },
     log: {
       width: logWidth,
       height: round(
+        (((logWidth / 100) * logRatio) / windowHeightWidthRatio) * 100
+      ),
+      heightForPlants: round(
         (((logWidth / 100) * logRatio) / groundBottomPartRatio) * 100
       ),
     },
@@ -51,7 +63,9 @@ export const houseLogDistanceFromTopCalculator = (
   windowWidth: number,
   leftMountainHeight: number,
   houseHeight: number,
-  logHeight: number
+  houseHeightForPlants: number,
+  logHeight: number,
+  logHeightForPlants: number
 ) => {
   const groundVisiblePartHeight = round(
     windowHeight * (1 - 0.05 - leftMountainHeight / 100)
@@ -59,20 +73,39 @@ export const houseLogDistanceFromTopCalculator = (
   const groundBottomPartHeight = windowWidth * groundBottomPartRatio;
 
   const houseDistanceFromTop = round(
+    ((windowHeight -
+      groundVisiblePartHeight * 0.5 -
+      (houseHeight / 100) * windowHeight) /
+      windowHeight) *
+      100
+  );
+  const houseDistanceFromTopForPlants = round(
     ((groundVisiblePartHeight * 0.5 -
-      (houseHeight / 100) * groundBottomPartHeight) /
+      (houseHeightForPlants / 100) * groundBottomPartHeight) /
       groundBottomPartHeight) *
       100
   );
 
   const logDistanceFromTop = round(
+    ((windowHeight -
+      groundVisiblePartHeight * 0.5 -
+      (logHeight / 100) * windowHeight) /
+      windowHeight) *
+      100
+  );
+  const logDistanceFromTopForPlants = round(
     ((groundVisiblePartHeight * 0.5 -
-      (logHeight / 100) * groundBottomPartHeight) /
+      (logHeightForPlants / 100) * groundBottomPartHeight) /
       groundBottomPartHeight) *
       100
   );
 
-  return { houseDistanceFromTop, logDistanceFromTop };
+  return {
+    houseDistanceFromTop,
+    logDistanceFromTop,
+    houseDistanceFromTopForPlants,
+    logDistanceFromTopForPlants,
+  };
 };
 
 export const logDistanceFromLeftCalculator = (

@@ -1,12 +1,11 @@
 import React, { createContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import Lottie from "react-lottie";
 import { animated, useSpring } from "react-spring";
 import Animation from "./Animation";
 import DayNightButton from "./DayNightButton";
 
 export const isDayContext = createContext(true);
-
+export const AllAnimationFinished = createContext(null);
 const StyledHeader = styled(animated.div)`
   position: relative;
   height: 100vh;
@@ -16,9 +15,10 @@ const StyledHeader = styled(animated.div)`
 
 interface HeaderProps {}
 
-const Header: React.FunctionComponent<HeaderProps> = ({}) => {
+const Header: React.FunctionComponent<HeaderProps> = () => {
   const [clientHydrated, setClientHydrated] = useState(false);
   const [isDay, setIsDay] = useState(true);
+  const [allAnimationFinished, setAllAnimationFinished] = useState(false);
 
   useEffect(() => {
     setClientHydrated(true);
@@ -33,7 +33,11 @@ const Header: React.FunctionComponent<HeaderProps> = ({}) => {
     <StyledHeader style={skyColor}>
       {clientHydrated && (
         <isDayContext.Provider value={isDay}>
-          <Animation />
+          <AllAnimationFinished.Provider
+            value={{ allAnimationFinished, setAllAnimationFinished }}
+          >
+            <Animation />
+          </AllAnimationFinished.Provider>
           <DayNightButton setIsDay={setIsDay} />
         </isDayContext.Provider>
       )}

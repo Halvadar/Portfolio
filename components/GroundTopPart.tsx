@@ -31,7 +31,6 @@ const StyledRiver = styled.div`
 interface GroundTopPartProps {
   windowHeight: number;
   windowWidth: number;
-  leftMountain: { width: number; height: number };
   setGroundTopPartBackgroundHeight: React.Dispatch<
     React.SetStateAction<number>
   >;
@@ -40,7 +39,6 @@ interface GroundTopPartProps {
 const GroundTopPart: React.FunctionComponent<GroundTopPartProps> = ({
   windowHeight,
   windowWidth,
-  leftMountain,
   setGroundTopPartBackgroundHeight,
 }) => {
   const riverDefaultOptions = {
