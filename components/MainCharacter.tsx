@@ -1,20 +1,20 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 
-import { interpolate, Spring, animated } from "react-spring/renderprops.cjs";
+import {
+  interpolate,
+  Spring,
+  animated as renderAnimated,
+} from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import Lottie from "react-lottie";
+import { animated } from "react-spring";
 import Man from "../public/Man";
 import Dog from "../public/Dog.json";
 import Fire from "../public/Fire.json";
-import { isDayContext } from "./Header";
+import { AllAnimationFinished, isDayContext } from "./Header";
 
-interface StyledMainCharacterProps {
-  width: number;
-}
-
-const StyledMainCharacter = styled(animated.div)<StyledMainCharacterProps>`
+const StyledMainCharacter = styled(renderAnimated.div)`
   position: absolute;
-  width: ${(props) => `${props.width}%`};
   left: 50%;
   z-index: 3;
   > svg {
@@ -39,16 +39,28 @@ const StyledFire = styled(animated.div)`
 `;
 
 interface MainCharacterProps {
+  setMainCharacterAnimationFinished: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
   mainCharacterDistanceFromTop: number;
   mainCharacterSize: { width: number; height: number };
-  focused?: boolean;
+  houseZoomAnimationInProgress: boolean;
+  setMainCharacterZoomAnimationInProgress: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
+  technologiesSelected: boolean;
 }
 
 const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
-  mainCharacterDistanceFromTop,
+  setMainCharacterAnimationFinished,
   mainCharacterSize,
-  focused,
+  houseZoomAnimationInProgress,
+  technologiesSelected,
+  setMainCharacterZoomAnimationInProgress,
 }) => {
+  const isDay = useContext(isDayContext);
+  const { allAnimationFinished } = useContext(AllAnimationFinished);
+
   const dogDefaultOptions = {
     loop: true,
     autoplay: true,
@@ -65,45 +77,62 @@ const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const isDay = useContext(isDayContext);
 
   return (
     <Spring
       native
       from={{
-        top: `${mainCharacterDistanceFromTop + mainCharacterSize.height}%`,
-        filterProp: 0,
+        width: `${mainCharacterSize.width}%`,
+        bottom: `${-mainCharacterSize.height}%`,
       }}
       to={{
-        top: `${mainCharacterDistanceFromTop}%`,
-        filterProp: focused ? 0 : 1,
+        width: `${mainCharacterSize.width}%`,
+        bottom: `${5}%`,
+      }}
+      onStart={() => {
+        setMainCharacterZoomAnimationInProgress(true);
+      }}
+      onRest={() => {
+        setMainCharacterAnimationFinished(true);
+
+        if (!technologiesSelected) {
+          setMainCharacterZoomAnimationInProgress(false);
+        }
       }}
     >
-      {({ top, filterProp }) => (
-        <StyledMainCharacter
-          style={{
-            top: top,
-            filter: interpolate(
-              [filterProp],
-              (filterP) => `blur(${filterP * 4}px)`
-            ),
-          }}
-          width={mainCharacterSize.width}
-        >
-          <StyledDog>
-            <Lottie options={dogDefaultOptions} />
-          </StyledDog>
-          <Man />
-
-          <Spring from={{ width: "0%" }} to={{ width: isDay ? "0%" : "25%" }}>
-            {(style) => (
-              <StyledFire style={style}>
-                <Lottie options={fireDefaultOptions} />
-              </StyledFire>
-            )}
-          </Spring>
-        </StyledMainCharacter>
-      )}
+      {({ width, bottom }) => {
+        return (
+          <StyledMainCharacter
+            style={{
+              width: width,
+              bottom: bottom,
+            }}
+          >
+            <StyledDog>
+              <Lottie
+                isStopped={houseZoomAnimationInProgress}
+                options={dogDefaultOptions}
+              />
+            </StyledDog>
+            <Man />
+            {allAnimationFinished ? (
+              <Spring
+                from={{ width: "0%" }}
+                to={{ width: isDay ? "0%" : "25%" }}
+              >
+                {(props) => (
+                  <StyledFire style={props}>
+                    <Lottie
+                      isStopped={isDay || houseZoomAnimationInProgress}
+                      options={fireDefaultOptions}
+                    />
+                  </StyledFire>
+                )}
+              </Spring>
+            ) : null}
+          </StyledMainCharacter>
+        );
+      }}
     </Spring>
   );
 };

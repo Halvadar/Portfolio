@@ -43,7 +43,12 @@ const DayNightButton: React.FunctionComponent<DayNightButtonProps> = ({
   });
 
   return (
-    <StyledToggle onClick={() => setIsDay(!isDay)}>
+    <StyledToggle
+      onClick={() => {
+        setIsDay(!isDay);
+        window.localStorage.setItem("isDay", JSON.stringify(!isDay));
+      }}
+    >
       <Toggle isDay={isDay} />
       <StyledSunMoon style={sunMoonPosition}>
         <SunMoon isDay={isDay} />

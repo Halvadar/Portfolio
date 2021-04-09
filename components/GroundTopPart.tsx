@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import Lottie from "react-lottie";
 import styled from "styled-components";
 import coordinateList from "../public/coordinateList";
@@ -6,6 +6,10 @@ import animationData from "../public/Tree.json";
 import GroundTopPartBackground from "../public/GroundTopPartBackground";
 import River from "../public/River.json";
 import { percentifier, pixelRemover } from "../functions/utilityFunctions";
+import {
+  AllAnimationFinished,
+  lottieAnimationsShouldBeStoppedContext,
+} from "./Header";
 
 const StyledTopPart = styled.div`
   position: relative;
@@ -34,12 +38,14 @@ interface GroundTopPartProps {
   setGroundTopPartBackgroundHeight: React.Dispatch<
     React.SetStateAction<number>
   >;
+  navbarItemSelected: boolean;
 }
 
 const GroundTopPart: React.FunctionComponent<GroundTopPartProps> = ({
   windowHeight,
   windowWidth,
   setGroundTopPartBackgroundHeight,
+  navbarItemSelected,
 }) => {
   const riverDefaultOptions = {
     loop: true,
@@ -58,45 +64,13 @@ const GroundTopPart: React.FunctionComponent<GroundTopPartProps> = ({
     },
   };
   // refs
-  const treeSetStateInterval = useRef(null);
-  const treeStateIndex = useRef(0);
+
   const groundTopPartBackgroundRef = useRef(null);
-  const [treeStates, setTreeStates] = useState(() => {
-    return coordinateList.map(() => {
-      return { isStopped: false };
-    });
-  });
 
-  useEffect(() => {
-    setTreeStates(() => {
-      const newTreeState = coordinateList.map(() => {
-        return { isStopped: true };
-      });
+  const { lottieAnimationsShouldBeStopped } = useContext(
+    lottieAnimationsShouldBeStoppedContext
+  );
 
-      return newTreeState;
-    });
-
-    const treeSetStateIntervalId = setInterval(() => {
-      if (treeStateIndex.current > coordinateList.length - 1) {
-        return clearInterval(treeSetStateInterval.current);
-      }
-
-      return setTreeStates((prevState) => {
-        const newTreeState = [...prevState];
-
-        newTreeState[treeStateIndex.current].isStopped = false;
-        treeStateIndex.current += 1;
-
-        return newTreeState;
-      });
-    }, 50);
-
-    treeSetStateInterval.current = treeSetStateIntervalId;
-
-    return () => {
-      clearInterval(treeSetStateInterval.current);
-    };
-  }, []);
   useEffect(() => {
     setGroundTopPartBackgroundHeight(
       percentifier(
@@ -110,7 +84,7 @@ const GroundTopPart: React.FunctionComponent<GroundTopPartProps> = ({
 
   return (
     <StyledTopPart>
-      {coordinateList.map(({ width, left, bottom, id, zIndex }, treeIndex) => {
+      {coordinateList.map(({ width, left, bottom, id, zIndex }) => {
         return (
           <div
             key={id}
@@ -123,9 +97,9 @@ const GroundTopPart: React.FunctionComponent<GroundTopPartProps> = ({
             }}
           >
             <Lottie
-              speed={0.7}
+              isStopped={lottieAnimationsShouldBeStopped}
+              speed={0.5}
               isClickToPauseDisabled
-              isStopped={treeStates[treeIndex].isStopped}
               options={defaultOptions}
             />
           </div>
@@ -135,7 +109,11 @@ const GroundTopPart: React.FunctionComponent<GroundTopPartProps> = ({
         <GroundTopPartBackground />
       </StyledTopPartBackground>
       <StyledRiver>
-        <Lottie options={riverDefaultOptions} isClickToPauseDisabled />
+        <Lottie
+          isStopped={lottieAnimationsShouldBeStopped}
+          options={riverDefaultOptions}
+          isClickToPauseDisabled
+        />
       </StyledRiver>
     </StyledTopPart>
   );

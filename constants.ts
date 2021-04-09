@@ -1,5 +1,5 @@
 const ratios = {
-  houseRatio: 1.02,
+  houseRatio: 1,
   logRatio: 2.14,
   groundBottomPartRatio: 2.15,
   mainCharacterRatio: 1.15,
@@ -10,6 +10,7 @@ const ratios = {
   grassRatio: 0.6,
   groundRatio: 2.18,
   cloudRatio: 0.45,
+  windowSvgRatio: 1.2031,
 };
 
 export default ratios;

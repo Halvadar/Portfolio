@@ -2,7 +2,7 @@ import { round } from "./utilityFunctions";
 import ratios from "../constants";
 
 // ratios
-const { houseRatio, groundBottomPartRatio, logRatio } = ratios;
+const { houseRatio, groundBottomPartRatio, logRatio, windowSvgRatio } = ratios;
 export const houseLogSizeCalculator = (
   windowHeight: number,
   windowWidth: number
@@ -120,4 +120,20 @@ export const logDistanceFromLeftCalculator = (
   }
 
   return 30;
+};
+
+export const houseZoomCoefficientCalculator = (
+  windowHeightWidthRatio: number,
+  windowSvgWidth: number
+) => {
+  if (windowHeightWidthRatio > windowSvgRatio) {
+    const windowSvgZoomedWidth =
+      (100 / windowSvgRatio) * windowHeightWidthRatio;
+
+    return windowSvgZoomedWidth / windowSvgWidth;
+  }
+
+  const windowSvgZoomedWidth = 100;
+
+  return windowSvgZoomedWidth / windowSvgWidth;
 };

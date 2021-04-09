@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import styled from "styled-components";
 import plantCoordinates from "../public/plantCoordinateList";
 import GroundBottomPartBackground from "../public/GroundBottomPartBackground";
@@ -10,6 +10,7 @@ import {
   plantStateIncrementValueCalculator,
 } from "../functions/plantFilter";
 import { numberToBoolean } from "../functions/utilityFunctions";
+import { AllAnimationFinished } from "./Header";
 
 // styled
 // We give top -4px because top and bottom part have space left between them
@@ -40,13 +41,13 @@ interface GroundBottomPartProps {
   logDistanceFromTop: number;
   logDistanceFromLeft: number;
   setPlantAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
+  mainCharacterAnimationFinished: boolean;
 }
 
 const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
   windowHeight,
   windowWidth,
   leftMountain,
-  groundAnimationFinished,
   mainCharacterDistanceFromTopForPlants,
   mainCharacterHeightForPlants,
   mainCharacterWidth,
@@ -58,6 +59,7 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
   logDistanceFromTop,
   logDistanceFromLeft,
   setPlantAnimationFinished,
+  mainCharacterAnimationFinished,
 }) => {
   // previousValues
   const initialWindowRatio = useRef(windowHeight / windowWidth);
@@ -93,13 +95,13 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
   const [plantAnimationInProgress, setPlantAnimationInProgress] = useState(
     true
   );
-
+  const { setAllAnimationFinished } = useContext(AllAnimationFinished);
   // refs
   const plantAnimationInterval = useRef(null);
   const plantAnimationIndex = useRef(0);
 
   useEffect(() => {
-    if (groundAnimationFinished) {
+    if (mainCharacterAnimationFinished) {
       const plantStateIncrementValue = plantStateIncrementValueCalculator(
         plantAnimationStates.length
       );
@@ -118,6 +120,7 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
           });
           setPlantAnimationInProgress(false);
           setPlantAnimationFinished(true);
+          setAllAnimationFinished(true);
 
           return clearInterval(plantAnimationInterval.current);
         }
@@ -145,7 +148,7 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
     return () => {
       clearInterval(plantAnimationInterval.current);
     };
-  }, [groundAnimationFinished]);
+  }, [mainCharacterAnimationFinished]);
   useEffect(() => {
     if (!plantAnimationInProgress) {
       setPlantAnimationStates((previousState) => {
@@ -166,45 +169,46 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
 
   return (
     <StyledBottomPart>
-      {plantAnimationStates.map((animationCanBeStarted, plantIndex) => {
-        const plant = plantCoordinates[plantIndex];
+      {mainCharacterAnimationFinished &&
+        plantAnimationStates.map((animationCanBeStarted, plantIndex) => {
+          const plant = plantCoordinates[plantIndex];
 
-        if (
-          plantHouseCharacterFilter(
-            10,
-            houseWholeDistanceFromLeft,
-            halfHouseDistanceFromTop,
-            houseWholeDistanceFromTop,
-            halfLogDistanceFromTop,
-            logWholeDistanceFromTop,
-            logDistanceFromLeft,
-            logWholeDistanceFromLeft,
-            halfCharacterDistanceFromTop,
-            characterWholeDistanceFromTop,
-            characterDistanceFromLeft,
-            characterWholeDistanceFromLeft,
-            plant.width,
-            plant.type,
-            plant.left,
-            plant.top,
-            windowWidth,
-            windowHeight
-          )
-        ) {
-          return null;
-        }
+          if (
+            plantHouseCharacterFilter(
+              10,
+              houseWholeDistanceFromLeft,
+              halfHouseDistanceFromTop,
+              houseWholeDistanceFromTop,
+              halfLogDistanceFromTop,
+              logWholeDistanceFromTop,
+              logDistanceFromLeft,
+              logWholeDistanceFromLeft,
+              halfCharacterDistanceFromTop,
+              characterWholeDistanceFromTop,
+              characterDistanceFromLeft,
+              characterWholeDistanceFromLeft,
+              plant.width,
+              plant.type,
+              plant.left,
+              plant.top,
+              windowWidth,
+              windowHeight
+            )
+          ) {
+            return null;
+          }
 
-        return (
-          <PlantComponent
-            key={plant.id}
-            animationCanBeStarted={animationCanBeStarted}
-            plantDistanceFromLeft={plant.left}
-            plantDistanceFromTop={plant.top}
-            plantType={plant.type}
-            plantWidth={plant.width}
-          />
-        );
-      })}
+          return (
+            <PlantComponent
+              key={plant.id}
+              animationCanBeStarted={animationCanBeStarted}
+              plantDistanceFromLeft={plant.left}
+              plantDistanceFromTop={plant.top}
+              plantType={plant.type}
+              plantWidth={plant.width}
+            />
+          );
+        })}
 
       <GroundBottomPartBackground />
     </StyledBottomPart>

@@ -27,9 +27,13 @@ interface GroundAnimationsProps {
   houseDistanceFromTop: number;
   logDistanceFromTop: number;
   logDistanceFromLeft: number;
+  mainCharacterAnimationFinished: boolean;
+  navbarItemSelected: boolean;
 }
 
 const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
+  mainCharacterAnimationFinished,
+
   windowWidth,
   windowHeight,
   leftMountain,
@@ -46,6 +50,7 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
   houseDistanceFromTop,
   logDistanceFromTop,
   logDistanceFromLeft,
+  navbarItemSelected,
 }) => {
   const [
     groundTopPartBackgroundHeight,
@@ -67,8 +72,10 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
             windowWidth={windowWidth}
             windowHeight={windowHeight}
             setGroundTopPartBackgroundHeight={setGroundTopPartBackgroundHeight}
+            navbarItemSelected={navbarItemSelected}
           />
           <GroundBottomPart
+            mainCharacterAnimationFinished={mainCharacterAnimationFinished}
             houseWidth={houseWidth}
             houseHeight={houseHeight}
             logWidth={logWidth}
@@ -96,8 +103,10 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
         windowWidth={windowWidth}
         windowHeight={windowHeight}
         setGroundTopPartBackgroundHeight={setGroundTopPartBackgroundHeight}
+        navbarItemSelected={navbarItemSelected}
       />
       <GroundBottomPart
+        mainCharacterAnimationFinished={mainCharacterAnimationFinished}
         houseWidth={houseWidth}
         houseHeight={houseHeight}
         logWidth={logWidth}

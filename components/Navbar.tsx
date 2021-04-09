@@ -45,7 +45,7 @@ const StyledNavbarItem = styled(animated.div)<StyledNavbarItemProps>`
     1px 1px 0px #000;
   cursor: pointer;
 
-  &:hover {
+  :hover {
     padding-left: ${(props) => (props.animationFinished ? "3rem" : null)};
   }
 `;
@@ -66,6 +66,7 @@ const StyledBack = styled.div<StyledBackProps>`
 `;
 
 interface NavbarProps {
+  groundAnimationFinished: boolean;
   currentNavItem: number;
   setCurrentNavItem: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -73,8 +74,8 @@ interface NavbarProps {
 const Navbar: React.FunctionComponent<NavbarProps> = ({
   currentNavItem,
   setCurrentNavItem,
+  groundAnimationFinished,
 }) => {
-  const { allAnimationFinished } = useContext(AllAnimationFinished);
   const [trailAnimationFinished, setTrailAnimationFinished] = useState(false);
   const [navTrailProps, setNavTrailProps] = useTrail(
     navbarItems.length,
@@ -84,43 +85,41 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
   );
 
   useEffect(() => {
-    if (allAnimationFinished) {
+    if (groundAnimationFinished) {
       setNavTrailProps({
         enteringX: 0,
         onRest: () => setTrailAnimationFinished(true),
       });
     }
-  }, [allAnimationFinished, setNavTrailProps]);
+  }, [groundAnimationFinished, setNavTrailProps]);
 
   return (
-    allAnimationFinished && (
-      <>
-        <StyledBack
-          hidden={currentNavItem === null}
-          onClick={() => setCurrentNavItem(null)}
-        >
-          <Close />
-        </StyledBack>
-        <StyledNavbar>
-          {navTrailProps.map(({ enteringX }, index) => (
-            <StyledNavbarItem
-              key={navbarItems[index].id}
-              onClick={() => setCurrentNavItem(index)}
-              animationFinished={trailAnimationFinished}
-              style={{
-                transform: !trailAnimationFinished
-                  ? enteringX.interpolate(
-                      (enteringProp) => `translateX(${enteringProp}px)`
-                    )
-                  : null,
-              }}
-            >
-              {navbarItems[index].name}
-            </StyledNavbarItem>
-          ))}
-        </StyledNavbar>
-      </>
-    )
+    <>
+      <StyledBack
+        hidden={currentNavItem === null}
+        onClick={() => setCurrentNavItem(null)}
+      >
+        <Close />
+      </StyledBack>
+      <StyledNavbar>
+        {navTrailProps.map(({ enteringX }, index) => (
+          <StyledNavbarItem
+            key={navbarItems[index].id}
+            onClick={() => setCurrentNavItem(index)}
+            animationFinished={trailAnimationFinished}
+            style={{
+              transform: !trailAnimationFinished
+                ? enteringX.interpolate(
+                    (enteringProp) => `translateX(${enteringProp}px)`
+                  )
+                : null,
+            }}
+          >
+            {navbarItems[index].name}
+          </StyledNavbarItem>
+        ))}
+      </StyledNavbar>
+    </>
   );
 };
 

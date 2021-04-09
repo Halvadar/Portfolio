@@ -5,7 +5,7 @@ import Lottie from "react-lottie";
 import House from "../public/House";
 import Log from "../public/Log";
 import Smoke from "../public/Smoke.json";
-import { AllAnimationFinished } from "./Header";
+import WindowComponent from "./WindowComponent";
 
 interface StyledHouseLog {
   width: number;
@@ -17,6 +17,9 @@ const StyledHouse = styled(animated.div)<StyledHouseLog>`
   width: ${(props) => `${props.width}%`};
   top: ${(props) => `${props.top}%`};
   z-index: 2;
+  > svg {
+    display: block;
+  }
 `;
 const StyledLog = styled(animated.div)<StyledHouseLog>`
   width: ${(props) => `${props.width}%`};
@@ -58,13 +61,11 @@ const HouseAnimation: React.FunctionComponent<HouseAnimationProps> = ({
       preserveAspectRatio: "xMidYMid slice",
     },
   };
-  const { setAllAnimationFinished } = useContext(AllAnimationFinished);
 
   return (
     <>
       <Spring
         native
-        onRest={() => setAllAnimationFinished(true)}
         from={{
           left: `-${houseLogSize.house.width}%`,
           filterProp: 0,
@@ -86,10 +87,11 @@ const HouseAnimation: React.FunctionComponent<HouseAnimationProps> = ({
                 filter: interpolate([filterProp], (s) => `blur(${s * 4}px)`),
               }}
             >
-              <StyledSmoke>
+              {/* <StyledSmoke>
                 <Lottie options={smokeDefaultOptions} />
-              </StyledSmoke>
+              </StyledSmoke> */}
               <House />
+              <WindowComponent />
             </StyledHouse>
             <StyledLog
               top={houseLogDistanceFromTop.logDistanceFromTop}

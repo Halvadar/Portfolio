@@ -4,8 +4,9 @@ import { animated, useSpring } from "react-spring";
 import Animation from "./Animation";
 import DayNightButton from "./DayNightButton";
 
-export const isDayContext = createContext(true);
+export const isDayContext = createContext(false);
 export const AllAnimationFinished = createContext(null);
+export const lottieAnimationsShouldBeStoppedContext = createContext(null);
 const StyledHeader = styled(animated.div)`
   position: relative;
   height: 100vh;
@@ -18,10 +19,20 @@ interface HeaderProps {}
 const Header: React.FunctionComponent<HeaderProps> = () => {
   const [clientHydrated, setClientHydrated] = useState(false);
   const [isDay, setIsDay] = useState(true);
+  const [
+    lottieAnimationsShouldBeStopped,
+    setLottieAnimationsShouldBeStopped,
+  ] = useState(true);
   const [allAnimationFinished, setAllAnimationFinished] = useState(false);
 
   useEffect(() => {
     setClientHydrated(true);
+
+    const localIsDay = window.localStorage.getItem("isDay");
+
+    if (localIsDay) {
+      setIsDay(JSON.parse(window.localStorage.getItem("isDay")));
+    }
   }, []);
 
   const skyColor = useSpring({
@@ -36,7 +47,14 @@ const Header: React.FunctionComponent<HeaderProps> = () => {
           <AllAnimationFinished.Provider
             value={{ allAnimationFinished, setAllAnimationFinished }}
           >
-            <Animation />
+            <lottieAnimationsShouldBeStoppedContext.Provider
+              value={{
+                lottieAnimationsShouldBeStopped,
+                setLottieAnimationsShouldBeStopped,
+              }}
+            >
+              <Animation />
+            </lottieAnimationsShouldBeStoppedContext.Provider>
           </AllAnimationFinished.Provider>
           <DayNightButton setIsDay={setIsDay} />
         </isDayContext.Provider>
