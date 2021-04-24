@@ -2,7 +2,13 @@ import { round } from "./utilityFunctions";
 import ratios from "../constants";
 
 // ratios
-const { houseRatio, groundBottomPartRatio, logRatio, windowSvgRatio } = ratios;
+const {
+  houseRatio,
+  groundBottomPartRatio,
+  logRatio,
+  windowSvgRatio,
+  houseWallRatio,
+} = ratios;
 export const houseLogSizeCalculator = (
   windowHeight: number,
   windowWidth: number
@@ -136,4 +142,33 @@ export const houseZoomCoefficientCalculator = (
   const windowSvgZoomedWidth = 100;
 
   return windowSvgZoomedWidth / windowSvgWidth;
+};
+
+export const houseWallPictureWrapperWidthCalculator = (
+  windowHeightIsGreater,
+  windowHeight,
+  windowWidth
+) => {
+  const windowHeightWidthRatio = windowHeight / windowWidth;
+
+  if (windowHeightWidthRatio > houseWallRatio) {
+    return {
+      houseWall: {
+        width: (100 / houseWallRatio) * windowSvgRatio,
+        height: 100,
+      },
+      pictureWrapper: {
+        width: (100 / windowHeightWidthRatio) * windowSvgRatio,
+        height: 100,
+      },
+    };
+  }
+
+  return {
+    houseWall: { width: 100, height: (100 * houseWallRatio) / windowSvgRatio },
+    pictureWrapper: {
+      width: 100,
+      height: (100 * windowHeightWidthRatio) / windowSvgRatio,
+    },
+  };
 };

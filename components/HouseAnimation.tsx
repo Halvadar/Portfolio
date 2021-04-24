@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { animated, interpolate, Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import Lottie from "react-lottie";
@@ -10,13 +10,14 @@ import WindowComponent from "./WindowComponent";
 interface StyledHouseLog {
   width: number;
   top: number;
+  zIndex?: number;
 }
 
 const StyledHouse = styled(animated.div)<StyledHouseLog>`
   position: absolute;
   width: ${(props) => `${props.width}%`};
   top: ${(props) => `${props.top}%`};
-  z-index: 2;
+  z-index: ${(props) => props.zIndex};
   > svg {
     display: block;
   }
@@ -44,14 +45,16 @@ interface HouseAnimationProps {
     logDistanceFromTop: number;
   };
   logDistanceFromLeft: number;
-  focused: boolean;
+  blurred: boolean;
+  projectsSelected: boolean;
 }
 
 const HouseAnimation: React.FunctionComponent<HouseAnimationProps> = ({
   houseLogSize,
   houseLogDistanceFromTop,
   logDistanceFromLeft,
-  focused,
+  blurred,
+  projectsSelected,
 }) => {
   const smokeDefaultOptions = {
     loop: true,
@@ -73,13 +76,14 @@ const HouseAnimation: React.FunctionComponent<HouseAnimationProps> = ({
         }}
         to={{
           left: "10%",
-          filterProp: focused ? 0 : 1,
+          filterProp: blurred ? 1 : 0,
           logLeft: `${logDistanceFromLeft}%`,
         }}
       >
         {({ left, filterProp, logLeft }) => (
           <>
             <StyledHouse
+              zIndex={projectsSelected ? 10 : 3}
               top={houseLogDistanceFromTop.houseDistanceFromTop}
               width={houseLogSize.house.width}
               style={{
@@ -87,11 +91,11 @@ const HouseAnimation: React.FunctionComponent<HouseAnimationProps> = ({
                 filter: interpolate([filterProp], (s) => `blur(${s * 4}px)`),
               }}
             >
-              {/* <StyledSmoke>
+              <StyledSmoke>
                 <Lottie options={smokeDefaultOptions} />
-              </StyledSmoke> */}
+              </StyledSmoke>
               <House />
-              <WindowComponent />
+              <WindowComponent projectsSelected={projectsSelected} />
             </StyledHouse>
             <StyledLog
               top={houseLogDistanceFromTop.logDistanceFromTop}

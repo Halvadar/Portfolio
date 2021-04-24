@@ -10,6 +10,7 @@ import {
   AllAnimationFinished,
   lottieAnimationsShouldBeStoppedContext,
 } from "./Header";
+import { groundTopPartHeightCalculator } from "../functions/groundFunctions";
 
 const StyledTopPart = styled.div`
   position: relative;
@@ -24,97 +25,44 @@ const StyledTopPartBackground = styled.div`
     display: block;
   }
 `;
-const StyledRiver = styled.div`
-  position: absolute;
-  width: 39.2%;
-  top: 2%;
-  right: 0;
-  z-index: 1;
-`;
 
 interface GroundTopPartProps {
   windowHeight: number;
   windowWidth: number;
+  windowRatio: number;
   setGroundTopPartBackgroundHeight: React.Dispatch<
     React.SetStateAction<number>
   >;
   navbarItemSelected: boolean;
+  projectsSelected: boolean;
 }
 
 const GroundTopPart: React.FunctionComponent<GroundTopPartProps> = ({
   windowHeight,
   windowWidth,
+  windowRatio,
   setGroundTopPartBackgroundHeight,
-  navbarItemSelected,
 }) => {
-  const riverDefaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: River,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
   // refs
 
   const groundTopPartBackgroundRef = useRef(null);
 
-  const { lottieAnimationsShouldBeStopped } = useContext(
-    lottieAnimationsShouldBeStoppedContext
-  );
-
   useEffect(() => {
     setGroundTopPartBackgroundHeight(
-      percentifier(
-        pixelRemover(
-          window.getComputedStyle(groundTopPartBackgroundRef.current).height
-        ),
-        windowHeight
-      )
+      groundTopPartHeightCalculator(windowHeight, windowWidth, windowRatio)
     );
-  }, [windowWidth, windowHeight, setGroundTopPartBackgroundHeight]);
+  }, [
+    windowWidth,
+    windowHeight,
+    windowRatio,
+    setGroundTopPartBackgroundHeight,
+  ]);
 
   return (
     <StyledTopPart>
-      {coordinateList.map(({ width, left, bottom, id, zIndex }) => {
-        return (
-          <div
-            key={id}
-            style={{
-              position: "absolute",
-              width: `${width}%`,
-              bottom: `${bottom}%`,
-              left: `${left}%`,
-              zIndex: zIndex || 0,
-            }}
-          >
-            <Lottie
-              isStopped={lottieAnimationsShouldBeStopped}
-              speed={0.5}
-              isClickToPauseDisabled
-              options={defaultOptions}
-            />
-          </div>
-        );
-      })}
       <StyledTopPartBackground ref={groundTopPartBackgroundRef}>
         <GroundTopPartBackground />
       </StyledTopPartBackground>
-      <StyledRiver>
-        <Lottie
-          isStopped={lottieAnimationsShouldBeStopped}
-          options={riverDefaultOptions}
-          isClickToPauseDisabled
-        />
-      </StyledRiver>
     </StyledTopPart>
   );
 };

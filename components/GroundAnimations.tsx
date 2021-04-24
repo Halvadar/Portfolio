@@ -13,6 +13,7 @@ const StyledGround = styled(animated.div)`
 interface GroundAnimationsProps {
   windowWidth: number;
   windowHeight: number;
+  windowRatio: number;
   leftMountain: { height: number; width: number };
   groundAnimationFinished: boolean;
   setGroundAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,13 +30,18 @@ interface GroundAnimationsProps {
   logDistanceFromLeft: number;
   mainCharacterAnimationFinished: boolean;
   navbarItemSelected: boolean;
+  groundTopPartBackgroundHeight: number;
+  setGroundTopPartBackgroundHeight: React.Dispatch<
+    React.SetStateAction<number>
+  >;
+  projectsSelected: boolean;
 }
 
 const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
   mainCharacterAnimationFinished,
-
   windowWidth,
   windowHeight,
+  windowRatio,
   leftMountain,
   groundAnimationFinished,
   setGroundAnimationFinished,
@@ -51,12 +57,10 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
   logDistanceFromTop,
   logDistanceFromLeft,
   navbarItemSelected,
+  groundTopPartBackgroundHeight,
+  setGroundTopPartBackgroundHeight,
+  projectsSelected,
 }) => {
-  const [
-    groundTopPartBackgroundHeight,
-    setGroundTopPartBackgroundHeight,
-  ] = useState<number>(undefined);
-
   return groundTopPartBackgroundHeight ? (
     <Spring
       native
@@ -71,8 +75,10 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
           <GroundTopPart
             windowWidth={windowWidth}
             windowHeight={windowHeight}
+            windowRatio={windowRatio}
             setGroundTopPartBackgroundHeight={setGroundTopPartBackgroundHeight}
             navbarItemSelected={navbarItemSelected}
+            projectsSelected={projectsSelected}
           />
           <GroundBottomPart
             mainCharacterAnimationFinished={mainCharacterAnimationFinished}
@@ -102,8 +108,10 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
       <GroundTopPart
         windowWidth={windowWidth}
         windowHeight={windowHeight}
+        windowRatio={windowRatio}
         setGroundTopPartBackgroundHeight={setGroundTopPartBackgroundHeight}
         navbarItemSelected={navbarItemSelected}
+        projectsSelected={projectsSelected}
       />
       <GroundBottomPart
         mainCharacterAnimationFinished={mainCharacterAnimationFinished}

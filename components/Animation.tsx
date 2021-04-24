@@ -1,10 +1,5 @@
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import {
-  Spring,
-  animated,
-  interpolate,
-  config,
-} from "react-spring/renderprops.cjs";
+import { Spring, animated, interpolate } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import { mountainWidthsCalculator } from "../functions/mountainFunctions";
 import useWindowSize from "../hooks/useWindowSize";
@@ -26,11 +21,12 @@ import {
 } from "../functions/houseFunctions";
 import HouseAnimation from "./HouseAnimation";
 import windowCoordinates from "../public/windowCoordinates";
-import WindowComponent from "./WindowComponent";
 import {
   AllAnimationFinished,
   lottieAnimationsShouldBeStoppedContext,
 } from "./Header";
+import TreesComponent from "./TreesComponent";
+import RiverComponent from "./RiverComponent";
 
 const StyledAnimation = styled(animated.div)`
   height: 100%;
@@ -44,9 +40,17 @@ interface AnimationProps {}
 
 const Animation: React.FunctionComponent<AnimationProps> = () => {
   // customHooks
-  const [windowWidth, windowHeight, windowHeightIsGreater] = useWindowSize();
+  const [
+    windowWidth,
+    windowHeight,
+    windowHeightIsGreater,
+    windowRatio,
+  ] = useWindowSize();
   // state
-
+  const [
+    groundTopPartBackgroundHeight,
+    setGroundTopPartBackgroundHeight,
+  ] = useState<number>(undefined);
   const [currentNavItem, setCurrentNavItem] = useState<number>(null);
   const [
     houseZoomAnimationInProgress,
@@ -57,10 +61,6 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
     setMainCharacterZoomAnimationInProgress,
   ] = useState<boolean>(false);
   // memo
-  const currentWindowRatio = useMemo(() => windowHeight / windowWidth, [
-    windowWidth,
-    windowHeight,
-  ]);
 
   const mountainProps = useMemo<{
     leftMountain: { width: number; height: number };
@@ -79,9 +79,9 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
       mainCharacterSizeCalculator(
         windowHeight,
         windowWidth,
-        currentNavItem === 0
+        currentNavItem === 0 && !houseZoomAnimationInProgress
       ),
-    [windowWidth, windowHeight, currentNavItem]
+    [windowWidth, windowHeight, currentNavItem, houseZoomAnimationInProgress]
   );
   const mainCharacterDistanceFromTop = useMemo(
     () =>
@@ -130,18 +130,18 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
   );
 
   const logDistanceFromLeft = useMemo(
-    () => logDistanceFromLeftCalculator(currentWindowRatio),
-    [currentWindowRatio]
+    () => logDistanceFromLeftCalculator(windowRatio),
+    [windowRatio]
   );
   const windowZoomCoefficient = useMemo(
-    () =>
-      houseZoomCoefficientCalculator(
-        windowHeight / windowWidth,
-        windowSvgSize.width
-      ),
+    () => houseZoomCoefficientCalculator(windowRatio, windowSvgSize.width),
     [windowHeight, windowWidth]
   );
-
+  const groundTopPartDistanceFromTop = useMemo<number>(() => {
+    return (
+      5 + mountainProps.leftMountain.height - groundTopPartBackgroundHeight
+    );
+  }, [mountainProps.leftMountain.height, groundTopPartBackgroundHeight]);
   const [
     mountainAnimationFinished,
     setMountainAnimationFinished,
@@ -218,7 +218,8 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
               native
               from={{ filterProp: 0 }}
               to={{
-                filterProp: currentNavItem === 0 ? 1 : 0,
+                filterProp:
+                  currentNavItem === 0 && !houseZoomAnimationInProgress ? 1 : 0,
               }}
             >
               {({ filterProp }) => (
@@ -226,7 +227,7 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
                   style={{
                     filter: interpolate(
                       [filterProp],
-                      (s) => `blur(${s * 4}px) grayscale(${s * 50}%)`
+                      (s) => `blur(${s * 4}px) grayscale(${s * 90}%)`
                     ),
                     height: "100%",
                   }}
@@ -266,10 +267,18 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
                     groundAnimationFinished={groundAnimationFinished}
                     windowWidth={windowWidth}
                     windowHeight={windowHeight}
+                    windowRatio={windowRatio}
                     leftMountain={mountainProps.leftMountain}
                     navbarItemSelected={
                       currentNavItem === 0 || currentNavItem === 1
                     }
+                    groundTopPartBackgroundHeight={
+                      groundTopPartBackgroundHeight
+                    }
+                    setGroundTopPartBackgroundHeight={
+                      setGroundTopPartBackgroundHeight
+                    }
+                    projectsSelected={currentNavItem === 1}
                   />
                   <SunAnimation
                     leftMountainHeight={mountainProps.leftMountain.height}
@@ -297,14 +306,33 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
                   setMainCharacterZoomAnimationInProgress={
                     setMainCharacterZoomAnimationInProgress
                   }
+                  mainCharacterZoomAnimationInProgress={
+                    mainCharacterZoomAnimationInProgress
+                  }
                 />
-
                 <HouseAnimation
-                  focused={currentNavItem !== 0}
+                  blurred={
+                    currentNavItem === 0 && !houseZoomAnimationInProgress
+                  }
                   logDistanceFromLeft={logDistanceFromLeft}
                   houseLogSize={houseLogSize}
                   houseLogDistanceFromTop={houseLogDistanceFromTop}
                   leftMountain={mountainProps.leftMountain}
+                  projectsSelected={currentNavItem === 1}
+                />
+
+                <TreesComponent
+                  blurred={
+                    currentNavItem === 0 && !houseZoomAnimationInProgress
+                  }
+                  groundTopPartDistanceFromTop={groundTopPartDistanceFromTop}
+                  groundTopPartBackgroundHeight={groundTopPartBackgroundHeight}
+                />
+                <RiverComponent
+                  blurred={
+                    currentNavItem === 0 && !houseZoomAnimationInProgress
+                  }
+                  groundTopPartDistanceFromTop={groundTopPartDistanceFromTop}
                 />
               </>
             )}

@@ -1,3 +1,7 @@
+import ratios from "../constants";
+
+const { groundTopPartRatio } = ratios;
+
 export const groundTopPartDistanceFromBottomCalculator = (
   leftMountainHeight: number
 ): number => {
@@ -22,4 +26,12 @@ export const groundBottomPartHeightCalculator = (
   // calculates the height of the ground's bottom part in pixels for the extension to fill it. 0.05 is the distance of the left mountain from top. +4 is the compenstation for top -4 of the bottom part for alignement.
 
   return windowHeight * (1 - 0.05 - leftMountainHeight / 100) + 4;
+};
+
+export const groundTopPartHeightCalculator = (
+  windowHeight: number,
+  windowWidth: number,
+  windowRatio: number
+) => {
+  return (100 * groundTopPartRatio) / windowRatio;
 };

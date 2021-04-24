@@ -13,11 +13,14 @@ const navbarItems = [
 ];
 
 const StyledNavbar = styled.div`
-  width: 12rem;
-  height: 40%;
   position: absolute;
+  @media (max-width: 768px) {
+    top: 10%;
+    width: 17rem;
+  }
   top: 15%;
-  z-index: 3;
+  z-index: 10;
+  width: 12rem;
 `;
 
 interface StyledNavbarItemProps {
@@ -30,9 +33,10 @@ const StyledNavbarItem = styled(animated.div)<StyledNavbarItemProps>`
   color: #ffffff;
 
   @media (max-width: 768px) {
-    font-size: 0.8rem;
+    font-size: 2rem;
     padding-left: 1rem;
     height: 20px;
+    margin: 1em;
   }
   margin: 0.5em;
   font-size: 1.2rem;
@@ -56,7 +60,7 @@ interface StyledBackProps {
 
 const StyledBack = styled.div<StyledBackProps>`
   position: absolute;
-  z-index: 3;
+  z-index: 10;
   width: 2rem;
   top: 5%;
   right: 30%;

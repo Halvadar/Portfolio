@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 
 function useWindowSize() {
-  const [windowSize, setWindowSize] = useState<[number, number, boolean]>([
+  const [windowSize, setWindowSize] = useState<
+    [number, number, boolean, number]
+  >([
     window.innerWidth,
     window.innerHeight,
     window.innerHeight > window.innerWidth,
+    window.innerHeight / window.innerWidth,
   ]);
   const timeOutRef = useRef(null);
 
@@ -14,6 +17,7 @@ function useWindowSize() {
         window.innerWidth,
         window.innerHeight,
         window.innerHeight > window.innerWidth,
+        window.innerHeight / window.innerWidth,
       ]);
     };
     const handleResize = () => {

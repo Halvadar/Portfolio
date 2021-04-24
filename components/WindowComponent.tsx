@@ -1,9 +1,10 @@
 import React from "react";
-import { animated, Spring } from "react-spring/renderprops.cjs";
+import { animated } from "react-spring/renderprops.cjs";
 
 import styled from "styled-components";
 import WindowSvg from "../public/Window";
 import windowCoordinates from "../public/windowCoordinates";
+import Projects from "./Projects";
 
 interface StyledWindowProps {
   left: number;
@@ -20,17 +21,23 @@ const StyledWindow = styled(animated.div)<StyledWindowProps>`
     display: block;
   }
   z-index: 2;
+  overflow: hidden;
 `;
 
-interface WindowComponentProps {}
+interface WindowComponentProps {
+  projectsSelected: boolean;
+}
 
-const WindowComponent: React.FunctionComponent<WindowComponentProps> = ({}) => {
+const WindowComponent: React.FunctionComponent<WindowComponentProps> = ({
+  projectsSelected,
+}) => {
   return (
     <StyledWindow
       width={windowCoordinates.width}
       left={windowCoordinates.left}
       top={windowCoordinates.top}
     >
+      <Projects projectsSelected={projectsSelected} />
       <WindowSvg />
     </StyledWindow>
   );

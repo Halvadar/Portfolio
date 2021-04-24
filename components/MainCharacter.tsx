@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import {
   interpolate,
@@ -8,15 +8,17 @@ import {
 import styled from "styled-components";
 import Lottie from "react-lottie";
 import { animated } from "react-spring";
-import Man from "../public/Man";
+import MainCharacterSvg from "../public/MainCharacter";
 import Dog from "../public/Dog.json";
 import Fire from "../public/Fire.json";
 import { AllAnimationFinished, isDayContext } from "./Header";
+import TechnologiesList from "./TechnologiesList";
+import Technologies from "./Technologies";
 
 const StyledMainCharacter = styled(renderAnimated.div)`
   position: absolute;
   left: 50%;
-  z-index: 3;
+  z-index: 4;
   > svg {
     position: relative;
     width: 100%;
@@ -49,6 +51,7 @@ interface MainCharacterProps {
     React.SetStateAction<boolean>
   >;
   technologiesSelected: boolean;
+  mainCharacterZoomAnimationInProgress: boolean;
 }
 
 const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
@@ -57,10 +60,13 @@ const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
   houseZoomAnimationInProgress,
   technologiesSelected,
   setMainCharacterZoomAnimationInProgress,
+  mainCharacterZoomAnimationInProgress,
 }) => {
   const isDay = useContext(isDayContext);
   const { allAnimationFinished } = useContext(AllAnimationFinished);
-
+  const [currentTechnologySelected, setCurrentTechnologySelected] = useState(
+    null
+  );
   const dogDefaultOptions = {
     loop: true,
     autoplay: true,
@@ -79,61 +85,73 @@ const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
   };
 
   return (
-    <Spring
-      native
-      from={{
-        width: `${mainCharacterSize.width}%`,
-        bottom: `${-mainCharacterSize.height}%`,
-      }}
-      to={{
-        width: `${mainCharacterSize.width}%`,
-        bottom: `${5}%`,
-      }}
-      onStart={() => {
-        setMainCharacterZoomAnimationInProgress(true);
-      }}
-      onRest={() => {
-        setMainCharacterAnimationFinished(true);
+    <>
+      <Spring
+        native
+        from={{
+          width: `${mainCharacterSize.width}%`,
+          bottom: `${-mainCharacterSize.height}%`,
+        }}
+        to={{
+          width: `${mainCharacterSize.width}%`,
+          bottom: `${5}%`,
+        }}
+        onStart={() => {
+          setMainCharacterZoomAnimationInProgress(true);
+        }}
+        onRest={() => {
+          setMainCharacterAnimationFinished(true);
 
-        if (!technologiesSelected) {
           setMainCharacterZoomAnimationInProgress(false);
-        }
-      }}
-    >
-      {({ width, bottom }) => {
-        return (
-          <StyledMainCharacter
-            style={{
-              width: width,
-              bottom: bottom,
-            }}
-          >
-            <StyledDog>
-              <Lottie
-                isStopped={houseZoomAnimationInProgress}
-                options={dogDefaultOptions}
+        }}
+      >
+        {({ width, bottom }) => {
+          return (
+            <StyledMainCharacter
+              style={{
+                width: width,
+                bottom: bottom,
+              }}
+            >
+              <StyledDog>
+                <Lottie
+                  isStopped={houseZoomAnimationInProgress}
+                  options={dogDefaultOptions}
+                />
+              </StyledDog>
+              <Technologies
+                technologiesSelected={technologiesSelected}
+                currentTechnologySelected={currentTechnologySelected}
+                setCurrentTechnologySelected={setCurrentTechnologySelected}
               />
-            </StyledDog>
-            <Man />
-            {allAnimationFinished ? (
-              <Spring
-                from={{ width: "0%" }}
-                to={{ width: isDay ? "0%" : "25%" }}
-              >
-                {(props) => (
-                  <StyledFire style={props}>
-                    <Lottie
-                      isStopped={isDay || houseZoomAnimationInProgress}
-                      options={fireDefaultOptions}
-                    />
-                  </StyledFire>
-                )}
-              </Spring>
-            ) : null}
-          </StyledMainCharacter>
-        );
-      }}
-    </Spring>
+              <MainCharacterSvg showLogos={technologiesSelected} />
+              {allAnimationFinished ? (
+                <Spring
+                  from={{ width: "0%" }}
+                  to={{ width: isDay ? "0%" : "25%" }}
+                >
+                  {(props) => (
+                    <StyledFire style={props}>
+                      <Lottie
+                        isStopped={isDay || houseZoomAnimationInProgress}
+                        options={fireDefaultOptions}
+                      />
+                    </StyledFire>
+                  )}
+                </Spring>
+              ) : null}
+            </StyledMainCharacter>
+          );
+        }}
+      </Spring>
+
+      {technologiesSelected && !houseZoomAnimationInProgress && (
+        <TechnologiesList
+          currentTechnologySelected={currentTechnologySelected}
+          setCurrentTechnologySelected={setCurrentTechnologySelected}
+        />
+      )}
+    </>
   );
 };
 
