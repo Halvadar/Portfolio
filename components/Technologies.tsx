@@ -70,7 +70,6 @@ const PassingLight = styled(animated.div)`
   opacity: 0.5;
 `;
 
-// transform: scale(1.3) translateY(10%);
 interface TechnologiesProps {
   technologiesSelected: boolean;
   currentTechnologySelected: number;

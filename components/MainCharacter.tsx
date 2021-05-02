@@ -15,6 +15,8 @@ import { AllAnimationFinished, isDayContext } from "./Header";
 import TechnologiesList from "./TechnologiesList";
 import Technologies from "./Technologies";
 
+import About from "./About";
+
 const StyledMainCharacter = styled(renderAnimated.div)`
   position: absolute;
   left: 50%;
@@ -25,6 +27,7 @@ const StyledMainCharacter = styled(renderAnimated.div)`
     left: -50%;
   }
 `;
+
 const StyledDog = styled.div`
   position: absolute;
   width: 30%;
@@ -51,6 +54,7 @@ interface MainCharacterProps {
     React.SetStateAction<boolean>
   >;
   technologiesSelected: boolean;
+  aboutSelected: boolean;
   mainCharacterZoomAnimationInProgress: boolean;
 }
 
@@ -60,6 +64,7 @@ const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
   houseZoomAnimationInProgress,
   technologiesSelected,
   setMainCharacterZoomAnimationInProgress,
+  aboutSelected,
   mainCharacterZoomAnimationInProgress,
 }) => {
   const isDay = useContext(isDayContext);
@@ -125,6 +130,8 @@ const MainCharacter: React.FunctionComponent<MainCharacterProps> = ({
                 setCurrentTechnologySelected={setCurrentTechnologySelected}
               />
               <MainCharacterSvg showLogos={technologiesSelected} />
+              {aboutSelected && <About />}
+
               {allAnimationFinished ? (
                 <Spring
                   from={{ width: "0%" }}

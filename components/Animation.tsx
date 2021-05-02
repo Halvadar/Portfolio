@@ -27,6 +27,7 @@ import {
 } from "./Header";
 import TreesComponent from "./TreesComponent";
 import RiverComponent from "./RiverComponent";
+import Contact from "./Contact";
 
 const StyledAnimation = styled(animated.div)`
   height: 100%;
@@ -40,12 +41,12 @@ interface AnimationProps {}
 
 const Animation: React.FunctionComponent<AnimationProps> = () => {
   // customHooks
-  const [
+  const {
     windowWidth,
     windowHeight,
     windowHeightIsGreater,
     windowRatio,
-  ] = useWindowSize();
+  } = useWindowSize();
   // state
   const [
     groundTopPartBackgroundHeight,
@@ -303,6 +304,7 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
                   }
                   houseZoomAnimationInProgress={houseZoomAnimationInProgress}
                   technologiesSelected={currentNavItem === 0}
+                  aboutSelected={currentNavItem === 2}
                   setMainCharacterZoomAnimationInProgress={
                     setMainCharacterZoomAnimationInProgress
                   }
@@ -339,6 +341,7 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
           </StyledZoomableContainer>
         )}
       </Spring>
+      <Contact selected={currentNavItem === 3} />
       <Navbar
         groundAnimationFinished={groundAnimationFinished}
         currentNavItem={currentNavItem}

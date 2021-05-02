@@ -37,7 +37,7 @@ const StyledListMainContainer = styled(
   color: #dbffff;
   font-weight: 700;
   @media (max-width: 768px) {
-    font-size: 1.7rem;
+    font-size: 1.3rem;
   }
   width: ${(props) => `${props.width}%`};
   bottom: ${(props) => `${props.bottom}%`};
@@ -109,12 +109,7 @@ const TechnologiesList: React.FunctionComponent<TechnologiesListProps> = ({
   setCurrentTechnologySelected,
 }) => {
   const [listAnimationStart, setListAnimationStart] = useState(false);
-  const [
-    windowWidth,
-    windowHeight,
-    windowHeightIsGreater,
-    windowRatio,
-  ] = useWindowSize();
+  const { windowRatio } = useWindowSize();
 
   const technologiesListCoordinates = useMemo(
     () => technologiesListCoordinatesCalculator(windowRatio),

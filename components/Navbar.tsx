@@ -15,25 +15,24 @@ const navbarItems = [
 const StyledNavbar = styled.div`
   position: absolute;
   @media (max-width: 768px) {
-    top: 10%;
-    width: 17rem;
+    top: 5%;
+    width: 15rem;
   }
-  top: 15%;
+  top: 2%;
   z-index: 10;
   width: 12rem;
 `;
 
 interface StyledNavbarItemProps {
-  animationFinished: boolean;
+  animationfinished: boolean;
 }
 
 const StyledNavbarItem = styled(animated.div)<StyledNavbarItemProps>`
   transition: ${(props) =>
-    props.animationFinished ? "padding-left 0.2s" : null};
+    props.animationfinished ? "padding-left 0.2s" : null};
   color: #ffffff;
 
   @media (max-width: 768px) {
-    font-size: 2rem;
     padding-left: 1rem;
     height: 20px;
     margin: 1em;
@@ -50,7 +49,7 @@ const StyledNavbarItem = styled(animated.div)<StyledNavbarItemProps>`
   cursor: pointer;
 
   :hover {
-    padding-left: ${(props) => (props.animationFinished ? "3rem" : null)};
+    padding-left: ${(props) => (props.animationfinished ? "3rem" : null)};
   }
 `;
 
@@ -110,7 +109,7 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
           <StyledNavbarItem
             key={navbarItems[index].id}
             onClick={() => setCurrentNavItem(index)}
-            animationFinished={trailAnimationFinished}
+            animationfinished={trailAnimationFinished}
             style={{
               transform: !trailAnimationFinished
                 ? enteringX.interpolate(

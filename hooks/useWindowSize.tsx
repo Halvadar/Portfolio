@@ -1,24 +1,30 @@
 import { useEffect, useRef, useState } from "react";
 
 function useWindowSize() {
-  const [windowSize, setWindowSize] = useState<
-    [number, number, boolean, number]
-  >([
-    window.innerWidth,
-    window.innerHeight,
-    window.innerHeight > window.innerWidth,
-    window.innerHeight / window.innerWidth,
-  ]);
+  const [windowSize, setWindowSize] = useState<{
+    windowWidth: number;
+    windowHeight: number;
+    windowHeightIsGreater: boolean;
+    windowRatio: number;
+    mobileDevice: boolean;
+  }>({
+    windowWidth: window.innerWidth,
+    windowHeight: window.innerHeight,
+    windowHeightIsGreater: window.innerHeight > window.innerWidth,
+    windowRatio: window.innerHeight / window.innerWidth,
+    mobileDevice: window.innerWidth <= 768,
+  });
   const timeOutRef = useRef(null);
 
   useEffect(() => {
     const setResize = () => {
-      setWindowSize([
-        window.innerWidth,
-        window.innerHeight,
-        window.innerHeight > window.innerWidth,
-        window.innerHeight / window.innerWidth,
-      ]);
+      setWindowSize({
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight,
+        windowHeightIsGreater: window.innerHeight > window.innerWidth,
+        windowRatio: window.innerHeight / window.innerWidth,
+        mobileDevice: window.innerWidth <= 768,
+      });
     };
     const handleResize = () => {
       clearTimeout(timeOutRef.current);
