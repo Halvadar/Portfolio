@@ -10,6 +10,8 @@ const StyledToggle = styled.div`
   top: 5%;
   right: 5%;
   width: 5%;
+  max-width: 100px;
+  min-width: 50px;
   cursor: pointer;
   > svg {
     display: block;

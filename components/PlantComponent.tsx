@@ -22,6 +22,7 @@ interface PlantComponentProps {
   plantWidth: number;
   plantDistanceFromLeft: number;
   plantDistanceFromTop: number;
+  mobileDevice: boolean;
 }
 
 const PlantComponent: React.FunctionComponent<PlantComponentProps> = ({
@@ -30,9 +31,14 @@ const PlantComponent: React.FunctionComponent<PlantComponentProps> = ({
   plantWidth,
   plantDistanceFromLeft,
   plantDistanceFromTop,
+  mobileDevice,
 }) =>
   animationCanBeStarted ? (
-    <Spring native from={{ width: "0%" }} to={{ width: `${plantWidth}%` }}>
+    <Spring
+      native
+      from={{ width: mobileDevice ? `${plantWidth}%` : "0%" }}
+      to={{ width: `${plantWidth}%` }}
+    >
       {(props) => {
         if (plantType === 0) {
           return (

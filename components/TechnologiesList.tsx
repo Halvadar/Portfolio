@@ -37,7 +37,9 @@ const StyledListMainContainer = styled(
   color: #dbffff;
   font-weight: 700;
   @media (max-width: 768px) {
-    font-size: 1.3rem;
+    font-size: 1rem;
+    height: 30%;
+    overflow-y: scroll;
   }
   width: ${(props) => `${props.width}%`};
   bottom: ${(props) => `${props.bottom}%`};

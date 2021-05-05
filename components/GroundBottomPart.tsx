@@ -28,6 +28,7 @@ const StyledBottomPart = styled.div`
 interface GroundBottomPartProps {
   windowHeight: number;
   windowWidth: number;
+  mobileDevice: boolean;
   leftMountain: { width: number; height: number };
   groundAnimationFinished: boolean;
   mainCharacterDistanceFromTopForPlants: number;
@@ -47,6 +48,7 @@ interface GroundBottomPartProps {
 const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
   windowHeight,
   windowWidth,
+  mobileDevice,
   leftMountain,
   mainCharacterDistanceFromTopForPlants,
   mainCharacterHeightForPlants,
@@ -89,7 +91,7 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
 
   // states
   const [plantAnimationStates, setPlantAnimationStates] = useState(() => {
-    return filteredPlants.map(() => false);
+    return filteredPlants.map(() => !!mobileDevice);
   });
   // we set this to true so the window resize plant function doesnt trigger before the animation starts
   const [plantAnimationInProgress, setPlantAnimationInProgress] = useState(
@@ -101,54 +103,73 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
   const plantAnimationIndex = useRef(0);
 
   useEffect(() => {
+    if (mobileDevice) {
+      setPlantAnimationStates((previousState) => {
+        return filteredPlantsUpdate(
+          windowHeight,
+          windowWidth,
+          leftMountain.height,
+          numberToBoolean(
+            windowHeight / windowWidth - initialWindowRatio.current
+          ),
+          previousState
+        );
+      });
+      setPlantAnimationInProgress(false);
+      setPlantAnimationFinished(true);
+      setAllAnimationFinished(true);
+    }
+
     if (mainCharacterAnimationFinished) {
-      const plantStateIncrementValue = plantStateIncrementValueCalculator(
-        plantAnimationStates.length
-      );
-      const plantAnimationIntervalId = setInterval(() => {
-        if (plantAnimationIndex.current > plantAnimationStates.length - 1) {
-          setPlantAnimationStates((previousState) => {
-            return filteredPlantsUpdate(
-              windowHeight,
-              windowWidth,
-              leftMountain.height,
-              numberToBoolean(
-                windowHeight / windowWidth - initialWindowRatio.current
-              ),
-              previousState
-            );
-          });
-          setPlantAnimationInProgress(false);
-          setPlantAnimationFinished(true);
-          setAllAnimationFinished(true);
+      if (!mobileDevice) {
+        const plantStateIncrementValue = plantStateIncrementValueCalculator(
+          plantAnimationStates.length
+        );
+        const plantAnimationIntervalId = setInterval(() => {
+          if (plantAnimationIndex.current > plantAnimationStates.length - 1) {
+            setPlantAnimationStates((previousState) => {
+              return filteredPlantsUpdate(
+                windowHeight,
+                windowWidth,
+                leftMountain.height,
+                numberToBoolean(
+                  windowHeight / windowWidth - initialWindowRatio.current
+                ),
+                previousState
+              );
+            });
+            setPlantAnimationInProgress(false);
+            setPlantAnimationFinished(true);
+            setAllAnimationFinished(true);
 
-          return clearInterval(plantAnimationInterval.current);
-        }
-
-        return setPlantAnimationStates((prevState) => {
-          const newPlantState = [...prevState];
-
-          for (
-            let i = plantAnimationIndex.current;
-            i < plantAnimationIndex.current + plantStateIncrementValue;
-            i += 1
-          ) {
-            newPlantState[i] = true;
+            return clearInterval(plantAnimationInterval.current);
           }
 
-          plantAnimationIndex.current += plantStateIncrementValue;
+          return setPlantAnimationStates((prevState) => {
+            const newPlantState = [...prevState];
 
-          return newPlantState;
-        });
-      }, 10);
+            for (
+              let i = plantAnimationIndex.current;
+              i < plantAnimationIndex.current + plantStateIncrementValue;
+              i += 1
+            ) {
+              newPlantState[i] = true;
+            }
 
-      plantAnimationInterval.current = plantAnimationIntervalId;
+            plantAnimationIndex.current += plantStateIncrementValue;
+
+            return newPlantState;
+          });
+        }, 10);
+
+        plantAnimationInterval.current = plantAnimationIntervalId;
+      }
     }
 
     return () => {
       clearInterval(plantAnimationInterval.current);
     };
-  }, [mainCharacterAnimationFinished]);
+  }, [mainCharacterAnimationFinished, mobileDevice]);
   useEffect(() => {
     if (!plantAnimationInProgress) {
       setPlantAnimationStates((previousState) => {
@@ -200,6 +221,7 @@ const GroundBottomPart: React.FunctionComponent<GroundBottomPartProps> = ({
 
           return (
             <PlantComponent
+              mobileDevice={mobileDevice}
               key={plant.id}
               animationCanBeStarted={animationCanBeStarted}
               plantDistanceFromLeft={plant.left}

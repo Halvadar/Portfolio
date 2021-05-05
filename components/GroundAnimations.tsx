@@ -14,6 +14,7 @@ interface GroundAnimationsProps {
   windowWidth: number;
   windowHeight: number;
   windowRatio: number;
+  mobileDevice: boolean;
   leftMountain: { height: number; width: number };
   groundAnimationFinished: boolean;
   setGroundAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
@@ -42,6 +43,7 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
   windowWidth,
   windowHeight,
   windowRatio,
+  mobileDevice,
   leftMountain,
   groundAnimationFinished,
   setGroundAnimationFinished,
@@ -81,6 +83,7 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
             projectsSelected={projectsSelected}
           />
           <GroundBottomPart
+            mobileDevice={mobileDevice}
             mainCharacterAnimationFinished={mainCharacterAnimationFinished}
             houseWidth={houseWidth}
             houseHeight={houseHeight}
@@ -114,6 +117,7 @@ const GroundAnimations: React.FunctionComponent<GroundAnimationsProps> = ({
         projectsSelected={projectsSelected}
       />
       <GroundBottomPart
+        mobileDevice={mobileDevice}
         mainCharacterAnimationFinished={mainCharacterAnimationFinished}
         houseWidth={houseWidth}
         houseHeight={houseHeight}

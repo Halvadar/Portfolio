@@ -46,6 +46,7 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
     windowHeight,
     windowHeightIsGreater,
     windowRatio,
+    mobileDevice,
   } = useWindowSize();
   // state
   const [
@@ -169,7 +170,8 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
       currentNavItem === 0 ||
       currentNavItem === 1 ||
       houseZoomAnimationInProgress ||
-      mainCharacterZoomAnimationInProgress
+      mainCharacterZoomAnimationInProgress ||
+      mobileDevice
     ) {
       setLottieAnimationsShouldBeStopped(true);
     } else {
@@ -181,6 +183,7 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
     houseZoomAnimationInProgress,
     mainCharacterZoomAnimationInProgress,
     setLottieAnimationsShouldBeStopped,
+    mobileDevice,
   ]);
 
   return (
@@ -237,11 +240,13 @@ const Animation: React.FunctionComponent<AnimationProps> = () => {
                     windowWidth={windowWidth}
                     windowHeightIsGreater={windowHeightIsGreater}
                     windowHeight={windowHeight}
+                    mobileDevice={mobileDevice}
                     setMountainAnimationFinished={setMountainAnimationFinished}
                     {...mountainProps}
                     mountainAnimationFinished={mountainAnimationFinished}
                   />
                   <GroundAnimations
+                    mobileDevice={mobileDevice}
                     mainCharacterAnimationFinished={
                       mainCharacterAnimationFinished
                     }

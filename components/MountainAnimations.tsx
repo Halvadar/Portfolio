@@ -55,6 +55,7 @@ interface MountainAnimationsProps {
   windowHeight: number;
   windowWidth: number;
   windowHeightIsGreater: boolean;
+  mobileDevice: boolean;
   leftMountain: { width: number; height: number };
   rightMountain: { width: number; height: number };
   setMountainAnimationFinished: React.Dispatch<React.SetStateAction<boolean>>;
@@ -65,6 +66,7 @@ const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
   windowHeight,
   windowWidth,
   windowHeightIsGreater,
+  mobileDevice,
   leftMountain,
   rightMountain,
   setMountainAnimationFinished,
@@ -101,7 +103,7 @@ const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
           <StyledMountain
             style={props}
             width={leftMountain.width}
-            top={5}
+            top={mobileDevice ? 10 : 5}
             left={20}
           >
             <LeftMountain />
@@ -116,7 +118,11 @@ const MountainAnimations: React.FunctionComponent<MountainAnimationsProps> = ({
           <StyledMountain
             style={props}
             width={rightMountain.width}
-            top={round(5 + leftMountain.height - rightMountain.height)}
+            top={round(
+              mobileDevice
+                ? 10 + leftMountain.height - rightMountain.height
+                : 5 + leftMountain.height - rightMountain.height
+            )}
           >
             <RightMountain />
           </StyledMountain>

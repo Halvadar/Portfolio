@@ -4,6 +4,7 @@ import { animated, useTrail } from "react-spring";
 import styled from "styled-components";
 import { AllAnimationFinished } from "./Header";
 import Close from "../public/Close";
+import useWindowSize from "../hooks/useWindowSize";
 
 const navbarItems = [
   { name: "Technologies", id: 0 },
@@ -14,26 +15,24 @@ const navbarItems = [
 
 const StyledNavbar = styled.div`
   position: absolute;
-  @media (max-width: 768px) {
-    top: 5%;
-    width: 15rem;
-  }
+
   top: 2%;
   z-index: 10;
-  width: 12rem;
 `;
 
 interface StyledNavbarItemProps {
   animationfinished: boolean;
+  mobileDevice: boolean;
+  selected: boolean;
 }
 
 const StyledNavbarItem = styled(animated.div)<StyledNavbarItemProps>`
   transition: ${(props) =>
     props.animationfinished ? "padding-left 0.2s" : null};
-  color: #ffffff;
+  color: ${(props) => (props.selected ? "#95e1ff" : "#ffffff")};
 
   @media (max-width: 768px) {
-    padding-left: 1rem;
+    padding-left: 0.5rem;
     height: 20px;
     margin: 1em;
   }
@@ -49,20 +48,28 @@ const StyledNavbarItem = styled(animated.div)<StyledNavbarItemProps>`
   cursor: pointer;
 
   :hover {
-    padding-left: ${(props) => (props.animationfinished ? "3rem" : null)};
+    padding-left: ${(props) =>
+      props.animationfinished && !props.mobileDevice ? "3rem" : null};
   }
 `;
 
 interface StyledBackProps {
   hidden: boolean;
+  rightDistance: number;
 }
 
 const StyledBack = styled.div<StyledBackProps>`
   position: absolute;
   z-index: 10;
-  width: 2rem;
-  top: 5%;
-  right: 30%;
+  max-width: 40px;
+  min-width: 30px;
+  transform: translateX(50%);
+
+  @media (max-width: 768px) {
+    top: 5%;
+  }
+  top: 2%;
+  right: ${(props) => `${props.rightDistance}%`};
   cursor: pointer;
   color: white;
   visibility: ${(props) => (props.hidden ? "hidden" : null)};
@@ -79,6 +86,7 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
   setCurrentNavItem,
   groundAnimationFinished,
 }) => {
+  const { mobileDevice } = useWindowSize();
   const [trailAnimationFinished, setTrailAnimationFinished] = useState(false);
   const [navTrailProps, setNavTrailProps] = useTrail(
     navbarItems.length,
@@ -99,6 +107,7 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
   return (
     <>
       <StyledBack
+        rightDistance={currentNavItem === 1 ? (mobileDevice ? 10 : 5) : 50}
         hidden={currentNavItem === null}
         onClick={() => setCurrentNavItem(null)}
       >
@@ -107,6 +116,8 @@ const Navbar: React.FunctionComponent<NavbarProps> = ({
       <StyledNavbar>
         {navTrailProps.map(({ enteringX }, index) => (
           <StyledNavbarItem
+            selected={currentNavItem === index}
+            mobileDevice={mobileDevice}
             key={navbarItems[index].id}
             onClick={() => setCurrentNavItem(index)}
             animationfinished={trailAnimationFinished}

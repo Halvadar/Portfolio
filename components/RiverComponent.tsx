@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { animated, Spring, interpolate } from "react-spring/renderprops.cjs";
 import { lottieAnimationsShouldBeStoppedContext } from "./Header";
 import River from "../public/River.json";
+import useWindowSize from "../hooks/useWindowSize";
 
 interface StyledRiverProps {
   top: number;
@@ -26,6 +27,7 @@ const RiverComponent: React.FunctionComponent<RiverComponentProps> = ({
   groundTopPartDistanceFromTop,
   blurred,
 }) => {
+  const { mobileDevice } = useWindowSize();
   const riverDefaultOptions = {
     loop: true,
     autoplay: true,
