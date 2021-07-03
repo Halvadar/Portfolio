@@ -11,7 +11,7 @@ const Index: React.FunctionComponent<indexProps> = ({}) => {
         <title>Portfolio</title>
         <link rel="shortcut icon" href="/Sun.svg" type="image/x-icon" />
       </Head>
-      <Header />;
+      <Header />
     </>
   );
 };
