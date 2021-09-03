@@ -12,11 +12,16 @@ const technologies = [
   { name: "Css", id: 2, value: 85, color: [1, 112, 186] },
   { name: "Html", id: 3, value: 80, color: [228, 77, 38] },
   { name: "Redux", id: 4, value: 75, color: [246, 255, 140] },
-  { name: "Node", id: 5, value: 70, color: [154, 224, 150] },
-  { name: "Express", id: 6, value: 70, color: [255, 46, 51] },
-  { name: "Next", id: 7, value: 65, color: [255, 255, 255] },
-  { name: "Graphql", id: 8, value: 60, color: [229, 53, 171] },
-  { name: "Mongo", id: 9, value: 60, color: [98, 218, 255] },
+  { name: "Nest", id: 5, value: 73, color: [224, 35, 78] },
+  { name: "Node", id: 6, value: 72, color: [154, 224, 150] },
+  { name: "TS", id: 7, value: 70, color: [49, 120, 198] },
+  { name: "Express", id: 8, value: 70, color: [255, 46, 51] },
+  { name: "Next", id: 9, value: 67, color: [255, 255, 255] },
+  { name: "Phaser", id: 10, value: 66, color: [127, 206, 255] },
+  { name: "Graphql", id: 11, value: 66, color: [229, 53, 171] },
+  { name: "Firebase", id: 12, value: 65, color: [255, 202, 40] },
+  { name: "PostgreSQL", id: 13, value: 63, color: [51, 103, 145] },
+  { name: "Mongo", id: 14, value: 60, color: [98, 218, 255] },
 ];
 
 interface StyledListMainContainerProps {
@@ -35,7 +40,7 @@ const StyledListMainContainer = styled(
   align-items: flex-end;
   z-index: 4;
   color: #dbffff;
-  font-weight: 700;
+  font-weight: 600;
   @media (max-width: 768px) {
     font-size: 1rem;
     height: 30%;
@@ -44,7 +49,7 @@ const StyledListMainContainer = styled(
   width: ${(props) => `${props.width}%`};
   bottom: ${(props) => `${props.bottom}%`};
   transform: ${(props) => props.transform};
-  font-size: 1.5rem;
+  font-size: 1rem;
 `;
 const StyledListBlackInside = styled(animated.div)`
   position: absolute;

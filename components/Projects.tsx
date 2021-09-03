@@ -13,6 +13,7 @@ import NodeLogo from "../public/logos/Node";
 import ExpressLogo from "../public/logos/Express";
 import MongoLogo from "../public/logos/Mongo";
 import GraphQlLogo from "../public/logos/GraphQl";
+import FirebaseLogo from "../public/logos/Firebase";
 
 // const Archos = dynamic(() => import("/Archos.png"), {
 //   loading: () => <div>loading</div>,
@@ -44,6 +45,18 @@ const projectsData = [
       This is a small test/exercise project i did for the job application. It uses React. Routing is done by React-router on this one as well. This project was a learning experience in drawing graphics as i used the Canvas api for the first time here.
     `,
   },
+  {
+    name: "Card Game",
+    src: "/CardGame.png",
+    url: "https://halvadar.github.io/Card-Game/",
+    Technologies: [
+      { name: "React", logo: ReactLogo },
+      { name: "Firebase", logo: FirebaseLogo },
+    ],
+    about: `
+      This is a small Card Game I made to test out Firebase. It uses Firestore, Firebase storage and Authentication. Other than that everything is done using react and styled-components.
+    `,
+  },
 ];
 
 interface StyledHouseWallProps {}
@@ -60,13 +73,15 @@ const StyledHouseWall = styled(animated.div)<StyledHouseWallProps>`
 
 interface StyledPictureFrameProps {
   ratioSmall: boolean;
+  hovered: boolean;
 }
 
 const StyledPictureFrame = styled.div<StyledPictureFrameProps>`
   width: ${(props) => (props.ratioSmall ? "20%" : "15%")};
-  z-index: 1;
+  z-index: ${(props) => (props.hovered ? 100 : 1)};
   margin: 0 5%;
-  transform: translateY(-50%);
+  position: relative;
+  transform: translateY(-20%);
   > svg {
     display: block;
   }
@@ -330,6 +345,7 @@ const Projects: React.FunctionComponent<ProjectsProps> = ({
 
               return (
                 <StyledPictureFrame
+                  hovered={hovered}
                   onMouseEnter={() =>
                     !mobileDevice && setCurrentProjectHovered(index)
                   }

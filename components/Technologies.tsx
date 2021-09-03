@@ -12,6 +12,11 @@ import NextLogo from "../public/logos/Next";
 import NodeLogo from "../public/logos/Node";
 import ReactLogo from "../public/logos/React";
 import ReduxLogo from "../public/logos/Redux";
+import NestLogo from "../public/logos/Nest";
+import PostgresLogo from "../public/logos/Postgres";
+import TypescriptLogo from "../public/logos/Typescript";
+import PhaserLogo from "../public/logos/Phaser";
+import FirebaseLogo from "../public/logos/Firebase";
 import logoCoordinates from "../public/logoCoordinates";
 
 const logos = [
@@ -20,10 +25,15 @@ const logos = [
   HtmlLogo,
   CssLogo,
   ReduxLogo,
+  NestLogo,
   NodeLogo,
+  TypescriptLogo,
   ExpressLogo,
   NextLogo,
+  PhaserLogo,
   GraphqlLogo,
+  FirebaseLogo,
+  PostgresLogo,
   MongoLogo,
 ];
 

@@ -9,17 +9,17 @@ export const technologiesListCoordinatesCalculator = (windowRatio) => {
     rightStart = 10;
     rightFinish = 5;
     bottom = 5;
-    width = 25;
+    width = 35;
     // transform = "translateX(25%)";
 
     return { rightStart, rightFinish, bottom, width, transform };
   }
 
-  if (windowRatio > 1) {
+  if (windowRatio > 0.8) {
     rightStart = 10;
     rightFinish = 5;
     bottom = 5;
-    width = 20;
+    width = 30;
     // transform = "translateX(25%)";
 
     return { rightStart, rightFinish, bottom, width, transform };
