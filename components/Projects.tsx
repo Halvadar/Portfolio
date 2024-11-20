@@ -384,6 +384,7 @@ const Projects: React.FunctionComponent<ProjectsProps> = ({
                   <ImageWrapper>
                     <AnimationImageWrapper hovered={hovered}>
                       <Image
+                        alt={picture.name}
                         src={picture.src}
                         layout="fill"
                         objectFit="cover"
