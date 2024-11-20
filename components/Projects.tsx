@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
+import React, { useMemo, useState } from "react";
+
 import { animated, Spring } from "react-spring/renderprops.cjs";
 import styled, { css, keyframes } from "styled-components";
 import Image from "next/image";
@@ -14,12 +14,43 @@ import ExpressLogo from "../public/logos/Express";
 import MongoLogo from "../public/logos/Mongo";
 import GraphQlLogo from "../public/logos/GraphQl";
 import FirebaseLogo from "../public/logos/Firebase";
+import Neo4jLogo from "../public/logos/Neo";
+import PhaserLogo from "../public/logos/Phaser";
+import NestLogo from "../public/logos/Nest";
 
 // const Archos = dynamic(() => import("/Archos.png"), {
 //   loading: () => <div>loading</div>,
 // });
 
 const projectsData = [
+  {
+    name: "Gazelle.ai",
+    src: "/Gazelle.png",
+    url: "https://gazelle.ai/",
+    Technologies: [
+      { name: "React", logo: ReactLogo },
+      { name: "Neo4j", logo: Neo4jLogo },
+      { name: "GraphQl", logo: GraphQlLogo },
+      { name: "Express", logo: ExpressLogo },
+      { name: "MongoDB", logo: MongoLogo },
+    ],
+    about: `Gazelle.ai (now part of Lightcast.io) is an AI-powered business intelligence platform that provides advanced search capabilities across a database of over 9 million business records. I contributed to this project for 1.5 years, leading the complete rewrite of the user-facing application, which comprised 60,000 lines of code. My responsibilities spanned the entire development lifecycle, from initial planning and architecture to deployment in production. The project leveraged the GRAND stack (GraphQL, React, Apollo, and Neo4j Database) to deliver a highly scalable and performant solution `,
+  },
+
+  {
+    name: "Profairgames",
+    src: "/Profairgames.png",
+    url: "https://profairgames.com/",
+    Technologies: [
+      { name: "Phaser", logo: PhaserLogo },
+      { name: "NestJs", logo: NestLogo },
+      { name: "React", logo: ReactLogo },
+    ],
+    about: `Profairgames is a gambling game provider where I worked for a year, participating in every stage of game development, from design and planning to coding, testing, and deployment. We used Phaser.js for game development and NestJS for the back end, where I was responsible for implementing and maintaining the back-end architecture.
+
+I also contributed to building mathematical models and calculating probabilities to ensure game fairness. Additionally, I played a key role in expanding the development team, conducting over 30 technical interviews and supervising new hires during my time there.`,
+  },
+
   {
     name: "Archos",
     src: "/Archos.png",
@@ -33,16 +64,7 @@ const projectsData = [
       { name: "GraphQl", logo: GraphQlLogo },
     ],
     about: `
-      This is a private Project I've worked on to test my skills. It took me about 3 months. This project utilizes MERN stack. Front-end is done by React. I used Redux for the state-management. Routing is done by React-router. Styling is done purely in css. Authentication natively as well as by google and facebook login api is available. Back-end is a combination of Express (NodeJs framework) GraphQl and Mongoose (MongoDb framework).       
-    `,
-  },
-  {
-    name: "Scandi",
-    src: "/Scandi.png",
-    url: "https://scandiapp.netlify.app/",
-    Technologies: [{ name: "React", logo: ReactLogo }],
-    about: `
-      This is a small test/exercise project i did for the job application. It uses React. Routing is done by React-router on this one as well. This project was a learning experience in drawing graphics as i used the Canvas api for the first time here.
+      This is a private project I worked on to test my skills. It took me about 3 months. This project utilizes MERN stack. Front-end is done by React. I used Redux for the state-management. Routing is done by React-router. Styling is done purely in css. Authentication natively as well as by google and facebook login api is available. Back-end is a combination of Express (NodeJs framework) GraphQl and Mongoose (MongoDb framework).       
     `,
   },
   {
@@ -109,6 +131,7 @@ const PictureWrapper = styled.div<PictureWrapperInterface>`
   height: ${(props) => `${props.height}%`};
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
   padding: 0 10%;
   cursor: pointer;
