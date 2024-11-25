@@ -10,7 +10,7 @@ import { Spring } from "react-spring/renderprops.cjs";
 import styled from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
 
-const about = `Hello, my name is Levan, I'm a 22 year old React Developer From Georgia. I got into web development about 2 years ago, starting off by learning the basics of HTML, CSS and Javascript, then moving on to React. My main frame of work revolves around React. I have a very nice understanding of How React works all around, its architecture, state, lifecycle, a good knowledge of its APIs (context, router) and proficiency of using hooks as well as Redux. Redux Alongside Typescript can be a very nice addition to a React project. Even though my main skillset consists of Front-end Technologies, I'm fully capable of working with Back-end as well. I've worked with Node.js and Express in my private projects, in which i've also made use of GraphQl apis and MongoDb database, so i have a good understanding of how the whole sequence of React project development goes, from start to finish. I Have a bit of understanding of React Native as well, but have not delved too far into it yet.  
+const about = `Hello, my name is Levan, I'm a 25 year old Fullstack Developer From Georgia. I got into web development about 5 years ago, starting off by learning the basics of HTML, CSS and Javascript, then moving on to React. I have more than 3 years of working experience. My main frame of work revolves around React and Next. I have a very solid understanding of all the principles surrounding ReactJs, it's architecture, state, lifecycle, a good knowledge of it's APIs (context, router) and proficiency of using hooks. I also have thorough knowledge of all the helper state management or UI libraries that come with React. I've used Redux, as well as Recoil extensively in my projects and have worked with variout UI libraries, such as Material UI, Tailwind, Styled-components, ChakraUI. I have worked with back-end throughout these 3 years multiple times as well. I've used ExpressJs and NestJs to implement API architectures from scratch. I've worked with REST as well as GraphQL APIs. I've worked on various cloud based services, databases, such as SQL, noSQL and in-memory databases. I've worked with testing, using Jest and WebdriverIO. I also have experience with CI/CD and have used Jenkins in my past project. I've implemented containerization using Docker in various projects. I have a solid understanding of GIT and have worked with Github, Gitlab, as well as Bitbucket. I consider myself to have a good understanding of programming paradigms and I'm able to write clean, refactorable code. I've worked on Game development using PhaserJS, which allowed me to get a good grasp on OOP. I've worked in Agile and Scrum environments and have a working experience with management services such as Jira and other Confluence products. 
 
 `;
 const aboutArray = about
@@ -173,9 +173,10 @@ const About: React.FunctionComponent<AboutProps> = () => {
 
             newState[currentWord.current] = true;
 
+            currentWord.current += 1;
+
             return newState;
           });
-          currentWord.current += 1;
         } else {
           clearInterval(intervalRef.current);
         }
