@@ -8,16 +8,14 @@ import useWindowSize from "../hooks/useWindowSize";
 import HouseWallSvg from "../public/HouseWall";
 import PictureFrame from "../public/PictureFrame";
 import ReactLogo from "../public/logos/React";
-import ReduxLogo from "../public/logos/Redux";
-import NodeLogo from "../public/logos/Node";
 import ExpressLogo from "../public/logos/Express";
 import MongoLogo from "../public/logos/Mongo";
 import GraphQlLogo from "../public/logos/GraphQl";
-import FirebaseLogo from "../public/logos/Firebase";
 import Neo4jLogo from "../public/logos/Neo";
 import PhaserLogo from "../public/logos/Phaser";
 import NestLogo from "../public/logos/Nest";
-
+import NextLogo from "../public/logos/Next";
+import TypescriptLogo from "../public/logos/Typescript";
 // const Archos = dynamic(() => import("/Archos.png"), {
 //   loading: () => <div>loading</div>,
 // });
@@ -33,6 +31,7 @@ const projectsData = [
       { name: "GraphQl", logo: GraphQlLogo },
       { name: "Express", logo: ExpressLogo },
       { name: "MongoDB", logo: MongoLogo },
+      { name: "Typescript", logo: TypescriptLogo },
     ],
     about: `Gazelle.ai (now part of Lightcast.io) is an AI-powered business intelligence platform that provides advanced search capabilities across a database of over 9 million business records. I contributed to this project for 1.5 years, leading the complete rewrite of the user-facing application, which comprised 60,000 lines of code. My responsibilities spanned the entire development lifecycle, from initial planning and architecture to deployment in production. The project leveraged the GRAND stack (GraphQL, React, Apollo, and Neo4j Database) to deliver a highly scalable and performant solution `,
   },
@@ -45,39 +44,23 @@ const projectsData = [
       { name: "Phaser", logo: PhaserLogo },
       { name: "NestJs", logo: NestLogo },
       { name: "React", logo: ReactLogo },
+      { name: "Typescript", logo: TypescriptLogo },
     ],
     about: `Profairgames is a gambling game provider where I worked for a year, participating in every stage of game development, from design and planning to coding, testing, and deployment. We used Phaser.js for game development and NestJS for the back end, where I was responsible for implementing and maintaining the back-end architecture.
 
 I also contributed to building mathematical models and calculating probabilities to ensure game fairness. Additionally, I played a key role in expanding the development team, conducting over 30 technical interviews and supervising new hires during my time there.`,
   },
-
   {
-    name: "Archos",
-    src: "/Archos.png",
-    url: "https://archos.netlify.app/",
+    name: "Chronolog",
+    src: "/Chronolog.png",
+    url: "https://chronolog.io",
     Technologies: [
-      { name: "React", logo: ReactLogo },
-      { name: "Redux", logo: ReduxLogo },
-      { name: "NodeJs", logo: NodeLogo },
-      { name: "Express", logo: ExpressLogo },
-      { name: "MongoDB", logo: MongoLogo },
+      { name: "Next", logo: NextLogo },
       { name: "GraphQl", logo: GraphQlLogo },
+      { name: "Typescript", logo: TypescriptLogo },
     ],
-    about: `
-      This is a private project I worked on to test my skills. It took me about 3 months. This project utilizes MERN stack. Front-end is done by React. I used Redux for the state-management. Routing is done by React-router. Styling is done purely in css. Authentication natively as well as by google and facebook login api is available. Back-end is a combination of Express (NodeJs framework) GraphQl and Mongoose (MongoDb framework).       
-    `,
-  },
-  {
-    name: "Card Game",
-    src: "/CardGame.png",
-    url: "https://halvadar.github.io/Card-Game/",
-    Technologies: [
-      { name: "React", logo: ReactLogo },
-      { name: "Firebase", logo: FirebaseLogo },
-    ],
-    about: `
-      This is a small Card Game I made to test out Firebase. It uses Firestore, Firebase storage and Authentication. Other than that everything is done using react and styled-components.
-    `,
+    about:
+      "Chronolog in an environment monitoring service. It allows it's customers to place photo stations, where passers by are allowed to align their mobile phones and take pictures. The pictures are processed, filtered and added to the right chronolog to create timelapses. I worked on this project for 8 months. We were using Next.js, alongside AWS amplify and GraphQL. My responsibilities included working on UI, as well as API related tasks. I worked on implementing WYSIWYG editor, fixing layout related issues, as well as adding new API endpoints.",
   },
 ];
 
