@@ -7,6 +7,10 @@ const contacts = [
   { type: "Email", name: "Levanbaidoshvili@gmail.com" },
   { type: "Facebook", name: "https://www.facebook.com/Halvadar" },
   { type: "Github", name: "https://github.com/Halvadar" },
+  {
+    type: "Linkedin",
+    name: "https://www.linkedin.com/in/levan-baidoshvili-9958121a6/",
+  },
 ];
 
 interface ContactContainerProps {
