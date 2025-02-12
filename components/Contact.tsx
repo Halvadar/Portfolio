@@ -4,12 +4,17 @@ import styled from "styled-components";
 import useWindowSize from "../hooks/useWindowSize";
 
 const contacts = [
-  { type: "Email", name: "Levanbaidoshvili@gmail.com" },
-  { type: "Facebook", name: "https://www.facebook.com/Halvadar" },
-  { type: "Github", name: "https://github.com/Halvadar" },
   {
-    type: "Linkedin",
-    name: "https://www.linkedin.com/in/levan-baidoshvili-9958121a6/",
+    name: "Linkedin",
+    link: "https://www.linkedin.com/in/levan-baidoshvili-9958121a6",
+    clickable: true,
+  },
+  { name: "Github", link: "https://github.com/Halvadar", clickable: true },
+  {
+    name: "Email",
+    link: "Levanbaidoshvili@gmail.com",
+    copyable: true,
+    clickable: true,
   },
 ];
 
@@ -39,12 +44,25 @@ interface ContactItemProps {
 const ContactItem = styled.div<ContactItemProps>`
   display: flex;
   cursor: ${(props) => (props.pointer ? "pointer" : null)};
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: ${(props) =>
+      props.pointer ? "rgba(255, 255, 255, 0.1)" : "transparent"};
+  }
 `;
+
 const ContactType = styled.div`
   color: #494949;
+  font-weight: 500;
+  margin-right: 8px;
 `;
+
 const ContactName = styled.div`
   color: #ffffff;
+  font-weight: 400;
 `;
 
 interface ContactsProps {
@@ -54,6 +72,15 @@ interface ContactsProps {
 const Contact: React.FunctionComponent<ContactsProps> = ({ selected }) => {
   const { windowWidth } = useWindowSize();
   const vertical = useMemo(() => windowWidth <= 1000, [windowWidth]);
+
+  const handleContactClick = (contact: typeof contacts[0]) => {
+    if (contact.copyable) {
+      navigator.clipboard.writeText(contact.link);
+      alert(`${contact.link} copied to clipboard!`);
+    } else if (contact.clickable) {
+      window.open(contact.link, "_blank");
+    }
+  };
 
   return (
     <Spring
@@ -66,20 +93,15 @@ const Contact: React.FunctionComponent<ContactsProps> = ({ selected }) => {
       {(styles) => (
         <ContactContainer style={styles} selected={selected} mobile={vertical}>
           {selected &&
-            contacts.map((contact, index) => {
-              const clickable = index === 1 || index === 2;
-
-              return (
-                <ContactItem
-                  pointer={clickable}
-                  onClick={() => clickable && window.open(contact.name)}
-                >
-                  <ContactType>{contact.type}</ContactType>
-                  :&nbsp;&nbsp;&nbsp;
-                  <ContactName>{contact.name}</ContactName>
-                </ContactItem>
-              );
-            })}
+            contacts.map((contact, index) => (
+              <ContactItem
+                key={index}
+                pointer={contact.clickable}
+                onClick={() => handleContactClick(contact)}
+              >
+                <ContactName>{contact.name}</ContactName>
+              </ContactItem>
+            ))}
         </ContactContainer>
       )}
     </Spring>
